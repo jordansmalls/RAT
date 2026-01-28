@@ -16,7 +16,6 @@ for (const key of required) {
     }
 }
 
-
 const getCorsOptions = () => {
     const isProduction = process.env.NODE_ENV === "production";
     const allowedOrigin = isProduction ? process.env.FRONTEND_LINK : process.env.FRONTEND_LINK_DEV;
@@ -28,7 +27,6 @@ const getCorsOptions = () => {
         allowedHeaders: "Content-Type,Authorization",
     };
 };
-
 
 export const env = {
     nodeEnv: process.env.NODE_ENV,

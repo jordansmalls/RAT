@@ -1,26 +1,26 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "description": "",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
-    "format": "prettier --write ."
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.7.1",
-  "devDependencies": {
-    "nodemon": "^3.1.11",
-    "prettier": "^3.8.1"
-  },
-  "dependencies": {
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "mongoose": "^9.1.5",
-    "morgan": "^1.10.1"
-  }
+    "name": "server",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon src/server.js",
+        "start": "node src/server.js",
+        "format": "prettier --write ."
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "packageManager": "pnpm@10.7.1",
+    "devDependencies": {
+        "nodemon": "^3.1.11",
+        "prettier": "^3.8.1"
+    },
+    "dependencies": {
+        "dotenv": "^17.2.3",
+        "express": "^5.2.1",
+        "mongoose": "^9.1.5",
+        "morgan": "^1.10.1"
+    }
 }
