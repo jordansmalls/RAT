@@ -8,6 +8,7 @@ const required = [
     "JWT_SECRET",
     "FRONTEND_LINK",
     "FRONTEND_LINK_DEV",
+    "BASE_URL",
 ];
 
 for (const key of required) {
@@ -33,6 +34,7 @@ export const env = {
     port: process.env.PORT,
     mongoUri: process.env.MONGO_URI,
     jwtSecret: process.env.JWT_SECRET,
-    // Added the CORS options here
+    baseUrl: process.env.BASE_URL,
+    frontendLink: process.env.FRONTEND_LINK,
     corsOptions: getCorsOptions(),
 };

@@ -1,4 +1,10 @@
+import mongoose from "mongoose"
 import Project from "../models/project.model.js";
+import Campaign from "../models/campaign.model.js"
+import Link from "../models/link.model.js";
+// import Click from "../models/click.model.js"
+
+
 
 // @desc    create new project
 // @route   POST /api/projects
@@ -102,33 +108,114 @@ export const fetchProjectDetails = async (req, res) => {
 
 // @desc    delete existing project
 // @route   DELETE /api/projects/:project_id
-// @access  public (public for dev environments only)
+// @access  public
 
 export const deleteProject = async (req, res) => {
     const { confirmation } = req.body;
     const { project_id } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(project_id)) {
+        return res.status(400).json({ message: "Invalid credentials: invalid project_id" });
+    }
+
+    if (confirmation !== true) {
+        return res.status(400).json({ message: "You must confirm deletion!" });
+    }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
-        if (!project_id || !confirmation) {
-            return res
-                .status(401)
-                .json({ message: "Invalid credentials: project_id or confirmation misisng" });
+        // Find campaigns under the project
+        const campaigns = await Campaign.find({ project: project_id }).session(session);
+        const campaignIds = campaigns.map((c) => c._id);
+
+        // Find links under those campaigns
+        const links = await Link.find({ campaign: { $in: campaignIds } }).session(session);
+        const linkIds = links.map((l) => l._id);
+
+        // Delete clicks for those links
+        await Click.deleteMany({ link: { $in: linkIds } }).session(session);
+
+        // Delete links
+        await Link.deleteMany({ campaign: { $in: campaignIds } }).session(session);
+
+        // Delete campaigns
+        await Campaign.deleteMany({ project: project_id }).session(session);
+
+        // Delete project
+        const deletedProject = await Project.findByIdAndDelete(project_id).session(session);
+
+        if (!deletedProject) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(404).json({ message: "Project not found" });
         }
 
-        if (confirmation === true) {
-            const result = await Project.deleteOne({ _id: project_id });
+        await session.commitTransaction();
+        session.endSession();
 
-            if (result.deletedCount === 0) {
-                return res.status(404).json({ message: "Project not found." });
-            }
-            return res.status(204).send();
-        } else {
-            return res
-                .status(400)
-                .json({ message: "Invalid credentials: must confirm project deletion" });
-        }
+        return res.status(200).json({
+            message: "Project and all related data deleted successfully",
+        });
     } catch (err) {
-        console.error("Error deleting a project:", err);
+        await session.abortTransaction();
+        session.endSession();
+        console.error("Error deleting project (Cascade delete failed):", err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+// @desc    fetch all projects
+// @route   GET /api/projects/
+// @access  public
+
+export const fetchAllProjects = async (req, res) => {
+    try {
+        const projects = await Project.find().sort({ createdAt: -1 });
+
+        if(projects.length === 0) {
+            return res.status(404).json({ message: "No projects found." })
+        }
+
+        return res.status(200).json({
+            message: `${projects.length} projects found.`,
+            projects,
+        });
+    } catch (err) {
+        console.error("Error fetching all projects:", err);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+// @desc    fetch all campaigns for a project
+// @route   GET /api/projects/:project_id/campaigns
+// @access  public
+
+const isValidId = (id) => mongoose.Types.ObjectId.isValid(id);
+
+export const fetchProjectCampaigns = async (req, res) => {
+    try {
+        const { project_id } = req.params;
+
+        if (!isValidId(project_id)) {
+            return res.status(400).json({ message: "Invalid credentials: invalid project_id" });
+        }
+
+        const campaigns = await Campaign.find({ project: project_id }).sort({ createdAt: -1 });
+
+        if(campaigns.length === 0) {
+            return res.status(404).json({ message: "No campaigns found." })
+        }
+
+        return res.status(200).json({
+            message: `${campaigns.length} campaigns found for this project.`,
+            campaigns,
+        });
+    } catch (err) {
+        console.error("Error fetching project campaigns:", err);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
