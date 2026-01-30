@@ -5,7 +5,7 @@ import {
     fetchProjectDetails,
     deleteProject,
     fetchAllProjects,
-    fetchProjectCampaigns
+    fetchProjectCampaigns,
 } from "../controllers/project.controller.js";
 
 const router = e.Router();
@@ -16,11 +16,11 @@ router.post("/", createProject);
 
 // @desc    fetch all projects
 // @route   GET /api/projects
-router.get("/", fetchAllProjects)
+router.get("/", fetchAllProjects);
 
 // @desc    fetch all campaigns for a project
 // @route   GET /api/projects/:project_id/campaigns
-router.get("/:project_id/campaigns", fetchProjectCampaigns)
+router.get("/:project_id/campaigns", fetchProjectCampaigns);
 
 // @desc     fetch project details
 // @route    GET /api/projects/:project_id

@@ -102,9 +102,6 @@ export const handleRedirect = async (req, res) => {
     }
 };
 
-
-
-
 // @desc    fetch aggregated analytics for a project
 // @route   GET /api/projects/:project_id/stats
 // @access  public

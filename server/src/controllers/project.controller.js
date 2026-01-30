@@ -1,10 +1,8 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 import Project from "../models/project.model.js";
-import Campaign from "../models/campaign.model.js"
+import Campaign from "../models/campaign.model.js";
 import Link from "../models/link.model.js";
 // import Click from "../models/click.model.js"
-
-
 
 // @desc    create new project
 // @route   POST /api/projects
@@ -166,7 +164,6 @@ export const deleteProject = async (req, res) => {
     }
 };
 
-
 // @desc    fetch all projects
 // @route   GET /api/projects/
 // @access  public
@@ -175,8 +172,8 @@ export const fetchAllProjects = async (req, res) => {
     try {
         const projects = await Project.find().sort({ createdAt: -1 });
 
-        if(projects.length === 0) {
-            return res.status(404).json({ message: "No projects found." })
+        if (projects.length === 0) {
+            return res.status(404).json({ message: "No projects found." });
         }
 
         return res.status(200).json({
@@ -188,7 +185,6 @@ export const fetchAllProjects = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
-
 
 // @desc    fetch all campaigns for a project
 // @route   GET /api/projects/:project_id/campaigns
@@ -206,8 +202,8 @@ export const fetchProjectCampaigns = async (req, res) => {
 
         const campaigns = await Campaign.find({ project: project_id }).sort({ createdAt: -1 });
 
-        if(campaigns.length === 0) {
-            return res.status(404).json({ message: "No campaigns found." })
+        if (campaigns.length === 0) {
+            return res.status(404).json({ message: "No campaigns found." });
         }
 
         return res.status(200).json({

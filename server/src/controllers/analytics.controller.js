@@ -702,7 +702,6 @@
 //     }
 // };
 
-
 //TODO: later add time based stats (clicks today, this week, etc.)
 
 import Click from "../models/click.model.js";
@@ -735,12 +734,10 @@ export const getHumanConfidence = async (req, res) => {
 
         const confidence = (humanClicks / total) * 100;
 
-        return res
-            .status(200)
-            .json({
-                message: "Human confidence calculated",
-                confidence: parseFloat(confidence.toFixed(1)),
-            });
+        return res.status(200).json({
+            message: "Human confidence calculated",
+            confidence: parseFloat(confidence.toFixed(1)),
+        });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error" });
@@ -1282,14 +1279,12 @@ export const getHeroCampaign = async (req, res) => {
         ]);
 
         if (result.length === 0) {
-            return res
-                .status(200)
-                .json({
-                    message: "Hero campaign retrieved",
-                    campaignId: null,
-                    title: null,
-                    clickCount: 0,
-                });
+            return res.status(200).json({
+                message: "Hero campaign retrieved",
+                campaignId: null,
+                title: null,
+                clickCount: 0,
+            });
         }
 
         const campaignId = result[0]._id;

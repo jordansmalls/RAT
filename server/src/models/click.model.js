@@ -38,13 +38,13 @@ const clickSchema = new mongoose.Schema(
             type: Number,
             min: 0,
             max: 6,
-            index: true
+            index: true,
         },
         hourOfDay: {
             type: Number,
             min: 0,
             max: 23,
-            index: true
+            index: true,
         },
         fullDateClicked: {
             type: String,
@@ -109,7 +109,6 @@ const clickSchema = new mongoose.Schema(
         },
         // Traffic Source
         referrer: String,
-
 
         // Bot Detection Flag
         isBot: {
