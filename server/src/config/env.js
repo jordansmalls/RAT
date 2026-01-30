@@ -8,6 +8,7 @@ const required = [
     "JWT_SECRET",
     "FRONTEND_LINK",
     "FRONTEND_LINK_DEV",
+    "BASE_URL",
 ];
 
 for (const key of required) {
@@ -15,7 +16,6 @@ for (const key of required) {
         throw new Error(`Missing required env variable: ${key}`);
     }
 }
-
 
 const getCorsOptions = () => {
     const isProduction = process.env.NODE_ENV === "production";
@@ -29,12 +29,12 @@ const getCorsOptions = () => {
     };
 };
 
-
 export const env = {
     nodeEnv: process.env.NODE_ENV,
     port: process.env.PORT,
     mongoUri: process.env.MONGO_URI,
     jwtSecret: process.env.JWT_SECRET,
-    // Added the CORS options here
+    baseUrl: process.env.BASE_URL,
+    frontendLink: process.env.FRONTEND_LINK,
     corsOptions: getCorsOptions(),
 };
