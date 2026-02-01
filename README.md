@@ -1,4 +1,4 @@
-<img src="./assets/rat.gif" width="600" alt="RAT, rich analytics tool"/>
+<img src="./assets/rat.gif" alt="RAT, rich analytics tool"/>
 
 **RAT (Rich Analytics Tool)** is a self hosted link tracking and campaign analytics system originally built to support freelance client work, by tracking how audiences engage with distributed content across platforms. It helps creators and brands understand where their audiences are most active, how their content is being engaged with, and which platforms drive the highest impact. The insights generated can be shared with sponsors, partners, and evaluators as tangible performance data.
 
