@@ -1,33 +1,44 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, Moon, Sun, Plus, ChevronDown, ChevronRight, BarChart3 } from 'lucide-react';
-import { useProjectStore } from '@/stores/useProjectStore';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  Menu,
+  Moon,
+  Sun,
+  Plus,
+  ChevronDown,
+  ChevronRight,
+  BarChart3,
+} from "lucide-react";
+import { useProjectStore } from "@/stores/useProjectStore";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState("light");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [expandedProjects, setExpandedProjects] = useState<Set<string>>(new Set());
-  const { projects, campaigns, fetchProjects, fetchCampaigns } = useProjectStore();
+  const [expandedProjects, setExpandedProjects] = useState<Set<string>>(
+    new Set(),
+  );
+  const { projects, campaigns, fetchProjects, fetchCampaigns } =
+    useProjectStore();
 
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.documentElement.setAttribute("data-theme", savedTheme);
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
+    const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
   };
 
   const toggleProject = async (projectId: string) => {
@@ -42,7 +53,7 @@ export default function Sidebar() {
   };
 
   const projectCampaigns = (projectId: string) =>
-    campaigns.filter(c => c.project === projectId);
+    campaigns.filter((c) => c.project === projectId);
 
   return (
     <>
@@ -67,7 +78,7 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-screen w-72 bg-base-200 border-r border-base-300 z-40 transition-transform duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
         <div className="flex flex-col h-full">
@@ -76,16 +87,14 @@ export default function Sidebar() {
             <div className="flex items-center justify-between mb-4">
               <Link href="/" className="flex items-center gap-2 group">
                 {/* <BarChart3 size={28} className="text-primary" /> */}
-                <span className="text-xl font-bold ">
-                  Rich Analytics
-                </span>
+                <span className="text-xl font-bold ">Rich Analytics</span>
               </Link>
               <button
                 onClick={toggleTheme}
                 className="btn btn-ghost btn-sm btn-circle"
                 aria-label="Toggle theme"
               >
-                {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+                {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
               </button>
             </div>
           </div>
@@ -96,7 +105,7 @@ export default function Sidebar() {
               <Link
                 href="/"
                 className={`btn btn-ghost w-full justify-start gap-2 ${
-                  pathname === '/' ? 'bg-primary text-primary-content' : ''
+                  pathname === "/" ? "bg-primary text-primary-content" : ""
                 }`}
                 onClick={() => setSidebarOpen(false)}
               >
@@ -125,9 +134,10 @@ export default function Sidebar() {
                           <Link
                             href={`/projects/${project._id}`}
                             className={`flex-1 btn btn-ghost btn-sm justify-start truncate ${
-                              pathname.startsWith(`/projects/${project._id}`) && !pathname.includes('/campaigns/')
-                                ? 'bg-primary text-primary-content'
-                                : ''
+                              pathname.startsWith(`/projects/${project._id}`) &&
+                              !pathname.includes("/campaigns/")
+                                ? "bg-primary text-primary-content"
+                                : ""
                             }`}
                             onClick={() => setSidebarOpen(false)}
                           >
@@ -143,8 +153,8 @@ export default function Sidebar() {
                                 href={`/projects/${project._id}/campaigns/${campaign._id}`}
                                 className={`btn btn-ghost btn-sm w-full justify-start text-xs truncate ${
                                   pathname.includes(campaign._id)
-                                    ? 'bg-secondary text-secondary-content'
-                                    : ''
+                                    ? "bg-secondary text-secondary-content"
+                                    : ""
                                 }`}
                                 onClick={() => setSidebarOpen(false)}
                               >

@@ -1,11 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import { ArrowLeft, Download } from 'lucide-react';
-import * as api from '@/lib/api';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft, Download } from "lucide-react";
+import * as api from "@/lib/api";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function LinkAnalyticsPage() {
   const params = useParams();
@@ -39,17 +46,17 @@ export default function LinkAnalyticsPage() {
         recentActivity: activity.data.slice(0, 20),
       });
     } catch (err) {
-      console.error('Failed to load analytics:', err);
+      console.error("Failed to load analytics:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleExport = async (format: 'json' | 'csv') => {
+  const handleExport = async (format: "json" | "csv") => {
     try {
       const blob = await api.downloadClicks(projectId, format);
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       a.download = `clicks-${projectId}.${format}`;
       document.body.appendChild(a);
@@ -57,7 +64,7 @@ export default function LinkAnalyticsPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (err) {
-      console.error('Failed to export:', err);
+      console.error("Failed to export:", err);
     }
   };
 
@@ -96,14 +103,14 @@ export default function LinkAnalyticsPage() {
           </div>
           <div className="flex gap-2">
             <button
-              onClick={() => handleExport('json')}
+              onClick={() => handleExport("json")}
               className="btn btn-outline gap-2"
             >
               <Download size={18} />
               Export JSON
             </button>
             <button
-              onClick={() => handleExport('csv')}
+              onClick={() => handleExport("csv")}
               className="btn btn-outline gap-2"
             >
               <Download size={18} />
@@ -122,7 +129,12 @@ export default function LinkAnalyticsPage() {
               <XAxis dataKey="index" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="clicks" stroke="#0ea5e9" strokeWidth={2} />
+              <Line
+                type="monotone"
+                dataKey="clicks"
+                stroke="#0ea5e9"
+                strokeWidth={2}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -144,7 +156,7 @@ export default function LinkAnalyticsPage() {
                 <tbody>
                   {analytics.countries.map((country, index) => (
                     <tr key={index}>
-                      <td>{country.country || 'Unknown'}</td>
+                      <td>{country.country || "Unknown"}</td>
                       <td className="text-right font-semibold">
                         {country.count.toLocaleString()}
                       </td>
@@ -235,14 +247,14 @@ export default function LinkAnalyticsPage() {
                   {analytics.recentActivity.map((click, index) => (
                     <tr key={index}>
                       <td>{new Date(click.clickedAt).toLocaleString()}</td>
-                      <td>{click.geo?.country || 'Unknown'}</td>
+                      <td>{click.geo?.country || "Unknown"}</td>
                       <td>
                         <span className="badge badge-sm">
-                          {click.device?.type || 'Unknown'}
+                          {click.device?.type || "Unknown"}
                         </span>
                       </td>
-                      <td>{click.browser?.name || 'Unknown'}</td>
-                      <td>{click.os?.name || 'Unknown'}</td>
+                      <td>{click.browser?.name || "Unknown"}</td>
+                      <td>{click.os?.name || "Unknown"}</td>
                     </tr>
                   ))}
                 </tbody>

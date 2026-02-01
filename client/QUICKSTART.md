@@ -3,19 +3,24 @@
 ## 🚀 Quick Start (5 minutes)
 
 ### Step 1: Install Dependencies
+
 ```bash
 cd rat
 pnpm install
 ```
 
 ### Step 2: Configure API
+
 Create `.env.local` file:
+
 ```bash
 NEXT_PUBLIC_API_BASE=http://localhost:4000
 ```
+
 Replace with your actual API endpoint URL.
 
 ### Step 3: Run Development Server
+
 ```bash
 pnpm run dev
 ```
@@ -62,12 +67,15 @@ Visit http://localhost:3000
 ## 🎨 Customization
 
 ### Change Primary Color
+
 Edit `tailwind.config.ts`:
+
 ```typescript
 primary: "#0ea5e9", // If you want to change primary color
 ```
 
 ### Add New Analytics
+
 1. Add endpoint to `lib/api.ts`
 2. Use in component with `useEffect`
 3. Display with Recharts

@@ -1,24 +1,37 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { ArrowLeft, Plus, Edit } from 'lucide-react';
-import { useProjectStore } from '@/stores/useProjectStore';
-import CampaignCard from '@/components/CampaignCard';
-import * as api from '@/lib/api';
-import type { Campaign } from '@/lib/types';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft, Plus, Edit } from "lucide-react";
+import { useProjectStore } from "@/stores/useProjectStore";
+import CampaignCard from "@/components/CampaignCard";
+import * as api from "@/lib/api";
+import type { Campaign } from "@/lib/types";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function ProjectDetailPage() {
   const params = useParams();
   const router = useRouter();
   const projectId = params.projectId as string;
-  const [activeTab, setActiveTab] = useState<'campaigns' | 'analytics'>('campaigns');
+  const [activeTab, setActiveTab] = useState<"campaigns" | "analytics">(
+    "campaigns",
+  );
   const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
-  const [editFormData, setEditFormData] = useState({ title: '', url: '' });
+  const [editFormData, setEditFormData] = useState({ title: "", url: "" });
 
-  const { campaigns, fetchCampaigns, updateCampaign, deleteCampaign, loading } = useProjectStore();
+  const { campaigns, fetchCampaigns, updateCampaign, deleteCampaign, loading } =
+    useProjectStore();
 
   // Analytics data
   const [analytics, setAnalytics] = useState({
@@ -52,7 +65,7 @@ export default function ProjectDetailPage() {
         countries: countries.data.slice(0, 5),
       });
     } catch (err) {
-      console.error('Failed to load analytics:', err);
+      console.error("Failed to load analytics:", err);
     }
   };
 
@@ -70,14 +83,14 @@ export default function ProjectDetailPage() {
       setEditingCampaign(null);
       fetchCampaigns(projectId);
     } catch (err) {
-      console.error('Failed to update campaign:', err);
+      console.error("Failed to update campaign:", err);
     }
   };
 
   const deviceChartData = [
-    { name: 'Mobile', value: analytics.devices.mobile, color: '#0ea5e9' },
-    { name: 'Tablet', value: analytics.devices.tablet, color: '#8b5cf6' },
-    { name: 'Desktop', value: analytics.devices.desktop, color: '#10b981' },
+    { name: "Mobile", value: analytics.devices.mobile, color: "#0ea5e9" },
+    { name: "Tablet", value: analytics.devices.tablet, color: "#8b5cf6" },
+    { name: "Desktop", value: analytics.devices.desktop, color: "#10b981" },
   ];
 
   return (
@@ -87,26 +100,28 @@ export default function ProjectDetailPage() {
           <ArrowLeft size={20} />
           Back to Projects
         </Link>
-        <h1 className="text-4xl font-bold tracking-[-0.10rem]">Project Details</h1>
+        <h1 className="text-4xl font-bold tracking-[-0.10rem]">
+          Project Details
+        </h1>
       </div>
 
       {/* Tabs */}
       <div className="tabs tabs-boxed mb-6 bg-base-200 p-1">
         <a
-          className={`tab ${activeTab === 'campaigns' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('campaigns')}
+          className={`tab ${activeTab === "campaigns" ? "tab-active" : ""}`}
+          onClick={() => setActiveTab("campaigns")}
         >
           Campaigns
         </a>
         <a
-          className={`tab ${activeTab === 'analytics' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('analytics')}
+          className={`tab ${activeTab === "analytics" ? "tab-active" : ""}`}
+          onClick={() => setActiveTab("analytics")}
         >
           Analytics
         </a>
       </div>
 
-      {activeTab === 'campaigns' && (
+      {activeTab === "campaigns" && (
         <div>
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">Campaigns</h2>
@@ -161,7 +176,7 @@ export default function ProjectDetailPage() {
         </div>
       )}
 
-      {activeTab === 'analytics' && (
+      {activeTab === "analytics" && (
         <div>
           <h2 className="text-2xl font-bold mb-6">Analytics Overview</h2>
 
