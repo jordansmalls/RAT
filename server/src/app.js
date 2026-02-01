@@ -2,6 +2,7 @@ import express from "express";
 import { env } from "./config/env.js";
 import { logger } from "./config/logger.js";
 import requestIp from "request-ip";
+import cors from "cors"
 
 import projectRoutes from "./routes/project.routes.js";
 import campaignRoutes from "./routes/campaign.routes.js";
@@ -12,6 +13,7 @@ export const app = express();
 
 app.use(express.json());
 app.use(logger);
+app.use(cors(env.corsOptions))
 app.use(requestIp.mw());
 
 app.use("/api/projects", projectRoutes);

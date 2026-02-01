@@ -29,5 +29,3 @@ export const formatFullDateClicked = function (date) {
 
     return `${dayOfWeek}, ${month} ${day}${suffix} ${year}, at ${timeOfDay}`;
 };
-
-console.log(formatFullDateClicked("2026-01-30T00:01:25.005+00:00"));

@@ -4,6 +4,7 @@ import Link from "../models/link.model.js";
 import { generateSlug } from "../utils/generate.slug.js";
 import { env } from "../config/env.js";
 import mongoose from "mongoose";
+import Click from "../models/click.model.js"
 
 // @desc    create new campaign
 // @route   POST /api/campaigns
