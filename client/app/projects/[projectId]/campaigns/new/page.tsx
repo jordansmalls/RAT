@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
-import { useProjectStore } from '@/stores/useProjectStore';
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useProjectStore } from "@/stores/useProjectStore";
 
 export default function NewCampaignPage() {
   const params = useParams();
@@ -13,17 +13,17 @@ export default function NewCampaignPage() {
   const { createCampaign, loading } = useProjectStore();
 
   const [formData, setFormData] = useState({
-    title: '',
-    url: '',
+    title: "",
+    url: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!formData.title.trim() || !formData.url.trim()) {
-      setError('All fields are required');
+      setError("All fields are required");
       return;
     }
 
@@ -35,7 +35,7 @@ export default function NewCampaignPage() {
       });
       router.push(`/projects/${projectId}`);
     } catch (err) {
-      setError('Failed to create campaign. Please try again.');
+      setError("Failed to create campaign. Please try again.");
       console.error(err);
     }
   };
@@ -43,7 +43,10 @@ export default function NewCampaignPage() {
   return (
     <div className="content-wrapper">
       <div className="mb-8">
-        <Link href={`/projects/${projectId}`} className="btn btn-ghost gap-2 mb-4">
+        <Link
+          href={`/projects/${projectId}`}
+          className="btn btn-ghost gap-2 mb-4"
+        >
           <ArrowLeft size={20} />
           Back to Project
         </Link>
@@ -65,7 +68,9 @@ export default function NewCampaignPage() {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-semibold">Campaign Title *</span>
+                  <span className="label-text font-semibold">
+                    Campaign Title *
+                  </span>
                 </label>
                 <input
                   type="text"
@@ -81,7 +86,9 @@ export default function NewCampaignPage() {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-semibold">Campaign URL *</span>
+                  <span className="label-text font-semibold">
+                    Campaign URL *
+                  </span>
                 </label>
                 <input
                   type="url"
@@ -95,7 +102,8 @@ export default function NewCampaignPage() {
                 />
                 <label className="label">
                   <span className="label-text-alt">
-                    This will be used to generate tracking links for different platforms
+                    This will be used to generate tracking links for different
+                    platforms
                   </span>
                 </label>
               </div>
@@ -115,7 +123,7 @@ export default function NewCampaignPage() {
                       Creating...
                     </>
                   ) : (
-                    'Create Campaign'
+                    "Create Campaign"
                   )}
                 </button>
               </div>

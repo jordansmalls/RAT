@@ -1,34 +1,34 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
-import { useProjectStore } from '@/stores/useProjectStore';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useProjectStore } from "@/stores/useProjectStore";
 
 export default function NewProjectPage() {
   const router = useRouter();
   const { createProject, loading } = useProjectStore();
   const [formData, setFormData] = useState({
-    clientName: '',
-    description: '',
+    clientName: "",
+    description: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!formData.clientName.trim()) {
-      setError('Project name is required');
+      setError("Project name is required");
       return;
     }
 
     try {
       await createProject(formData);
-      router.push('/');
+      router.push("/");
     } catch (err) {
-      setError('Failed to create project. Please try again.');
+      setError("Failed to create project. Please try again.");
       console.error(err);
     }
   };
@@ -40,7 +40,9 @@ export default function NewProjectPage() {
           <ArrowLeft size={20} />
           Back to Projects
         </Link>
-        <h1 className="text-4xl font-bold tracking-[-0.10rem]">Create New Project</h1>
+        <h1 className="text-4xl font-bold tracking-[-0.10rem]">
+          Create New Project
+        </h1>
         <p className="text-base-content opacity-70 mt-2">
           Start tracking links for a new client or campaign
         </p>
@@ -58,7 +60,9 @@ export default function NewProjectPage() {
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-semibold">Project Name *</span>
+                  <span className="label-text font-semibold">
+                    Project Name *
+                  </span>
                 </label>
                 <input
                   type="text"
@@ -101,7 +105,7 @@ export default function NewProjectPage() {
                       Creating...
                     </>
                   ) : (
-                    'Create Project'
+                    "Create Project"
                   )}
                 </button>
               </div>

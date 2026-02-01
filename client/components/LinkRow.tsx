@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Copy, BarChart, CheckCircle } from 'lucide-react';
-import { useState } from 'react';
-import type { Link as LinkType } from '@/lib/types';
+import Link from "next/link";
+import { Copy, BarChart, CheckCircle } from "lucide-react";
+import { useState } from "react";
+import type { Link as LinkType } from "@/lib/types";
 
 interface LinkRowProps {
   link: LinkType;
@@ -20,20 +20,22 @@ export default function LinkRow({ link, projectId, campaignId }: LinkRowProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error("Failed to copy:", err);
     }
   };
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('en-US').format(num);
+    return new Intl.NumberFormat("en-US").format(num);
   };
 
   return (
     <tr className="hover">
       <td>
         <div className="flex items-center gap-2">
-          <div className={`badge ${link.isActive ? 'badge-success' : 'badge-error'}`}>
-            {link.isActive ? 'Active' : 'Inactive'}
+          <div
+            className={`badge ${link.isActive ? "badge-success" : "badge-error"}`}
+          >
+            {link.isActive ? "Active" : "Inactive"}
           </div>
           <span className="font-medium">{link.title}</span>
         </div>
@@ -42,7 +44,9 @@ export default function LinkRow({ link, projectId, campaignId }: LinkRowProps) {
         <span className="badge badge-outline">{link.platform}</span>
       </td>
       <td>
-        <code className="bg-base-200 px-2 py-1 rounded text-sm">{link.slug}</code>
+        <code className="bg-base-200 px-2 py-1 rounded text-sm">
+          {link.slug}
+        </code>
       </td>
       <td>
         <div className="flex items-center gap-2">
@@ -52,12 +56,18 @@ export default function LinkRow({ link, projectId, campaignId }: LinkRowProps) {
             className="btn btn-ghost btn-xs btn-circle"
             aria-label="Copy URL"
           >
-            {copied ? <CheckCircle size={14} className="text-success" /> : <Copy size={14} />}
+            {copied ? (
+              <CheckCircle size={14} className="text-success" />
+            ) : (
+              <Copy size={14} />
+            )}
           </button>
         </div>
       </td>
       <td>
-        <span className="font-semibold text-primary">{formatNumber(link.clickCount)}</span>
+        <span className="font-semibold text-primary">
+          {formatNumber(link.clickCount)}
+        </span>
       </td>
       <td>
         <Link

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import { ArrowLeft, Plus, Edit } from 'lucide-react';
-import { useProjectStore } from '@/stores/useProjectStore';
-import LinkRow from '@/components/LinkRow';
-import * as api from '@/lib/api';
-import { useState } from 'react';
-import type { Campaign } from '@/lib/types';
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft, Plus, Edit } from "lucide-react";
+import { useProjectStore } from "@/stores/useProjectStore";
+import LinkRow from "@/components/LinkRow";
+import * as api from "@/lib/api";
+import { useState } from "react";
+import type { Campaign } from "@/lib/types";
 
 export default function CampaignDetailPage() {
   const params = useParams();
@@ -30,21 +30,26 @@ export default function CampaignDetailPage() {
       const data = await api.getCampaign(campaignId);
       setCampaign(data);
     } catch (err) {
-      console.error('Failed to load campaign:', err);
+      console.error("Failed to load campaign:", err);
     }
   };
 
   return (
     <div className="content-wrapper">
       <div className="mb-8">
-        <Link href={`/projects/${projectId}`} className="btn btn-ghost gap-2 mb-4">
+        <Link
+          href={`/projects/${projectId}`}
+          className="btn btn-ghost gap-2 mb-4"
+        >
           <ArrowLeft size={20} />
           Back to Project
         </Link>
 
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold tracking-[-0.10rem]">{campaign?.title || 'Campaign'}</h1>
+            <h1 className="text-4xl font-bold tracking-[-0.10rem]">
+              {campaign?.title || "Campaign"}
+            </h1>
             {campaign?.url && (
               <a
                 href={campaign.url}
@@ -63,7 +68,9 @@ export default function CampaignDetailPage() {
       </div>
 
       <div className="mb-6 flex justify-between items-center">
-        <h2 className="text-2xl font-bold tracking-[-0.05rem]">Tracking Links</h2>
+        <h2 className="text-2xl font-bold tracking-[-0.05rem]">
+          Tracking Links
+        </h2>
         <Link
           href={`/projects/${projectId}/campaigns/${campaignId}/links/new`}
           className="btn btn-primary gap-2"

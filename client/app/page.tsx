@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { Plus } from 'lucide-react';
-import Link from 'next/link';
-import { useProjectStore } from '@/stores/useProjectStore';
-import ProjectCard from '@/components/ProjectCard';
+import { useEffect } from "react";
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import { useProjectStore } from "@/stores/useProjectStore";
+import ProjectCard from "@/components/ProjectCard";
 
 export default function HomePage() {
   const { projects, loading, fetchProjects, deleteProject } = useProjectStore();
@@ -43,7 +43,8 @@ export default function HomePage() {
           <div className="card-body items-center text-center py-16">
             <h2 className="text-2xl font-semibold mb-4">No projects yet</h2>
             <p className="text-base-content opacity-70 mb-6 max-w-md">
-              Get started by creating your first project to track campaign links and analyze performance.
+              Get started by creating your first project to track campaign links
+              and analyze performance.
             </p>
             <Link href="/projects/new" className="btn btn-primary gap-2">
               <Plus size={20} />

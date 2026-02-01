@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Edit, Trash2, ExternalLink, Link as LinkIcon } from 'lucide-react';
-import type { Campaign } from '@/lib/types';
+import Link from "next/link";
+import { Edit, Trash2, ExternalLink, Link as LinkIcon } from "lucide-react";
+import type { Campaign } from "@/lib/types";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -20,15 +20,19 @@ export default function CampaignCard({
   onDelete,
 }: CampaignCardProps) {
   const formatDate = (dateString: string) => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(new Date(dateString));
   };
 
   const handleDelete = () => {
-    if (window.confirm(`Delete campaign "${campaign.title}"? This will also delete all associated links.`)) {
+    if (
+      window.confirm(
+        `Delete campaign "${campaign.title}"? This will also delete all associated links.`,
+      )
+    ) {
       onDelete(campaign._id);
     }
   };
@@ -37,7 +41,9 @@ export default function CampaignCard({
     <tr className="hover">
       <td>
         <div className="font-semibold">{campaign.title}</div>
-        <div className="text-sm opacity-60">{formatDate(campaign.createdAt)}</div>
+        <div className="text-sm opacity-60">
+          {formatDate(campaign.createdAt)}
+        </div>
       </td>
       <td>
         <a
