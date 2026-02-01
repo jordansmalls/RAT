@@ -164,7 +164,7 @@ export default function ProjectDetailPage() {
                       key={campaign._id}
                       campaign={campaign}
                       projectId={projectId}
-                      linkCount={0}
+                      linkCount={9}
                       onEdit={handleEdit}
                       onDelete={deleteCampaign}
                     />
