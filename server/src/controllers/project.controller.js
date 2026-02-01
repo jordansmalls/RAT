@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Project from "../models/project.model.js";
 import Campaign from "../models/campaign.model.js";
 import Link from "../models/link.model.js";
-// import Click from "../models/click.model.js"
+import Click from "../models/click.model.js"
 
 // @desc    create new project
 // @route   POST /api/projects
