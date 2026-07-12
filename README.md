@@ -10,7 +10,7 @@ This open sourced version is a generalized implementation of the system, designe
 - **Project Management**: Organize campaigns by client/project
 - **Link Tracking**: Generate and track custom short links
 - **Analytics Dashboard**: Visualize clicks, devices, geography, and more
-- **Modern UI**: Built with TailwindCSS + DaisyUI
+- **Modern UI**: Built with Next.js, Tailwind CSS, and shadcn/ui
 - **Dark Mode**: Toggle between light and dark themes
 - **Behavioral Insights**: Detect human vs bot traffic, engagement velocity, and campaign performance signals
 - **RAT can log**:
@@ -32,8 +32,8 @@ This open sourced version is a generalized implementation of the system, designe
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
-- **UI**: TailwindCSS + DaisyUI
+- **Framework**: Next.js 16 (App Router)
+- **UI**: Tailwind CSS + shadcn/ui
 - **State Management**: Zustand
 - **Charts**: Recharts
 - **Icons**: lucide-react
@@ -44,13 +44,13 @@ This open sourced version is a generalized implementation of the system, designe
 
 ##  Quickstart
 
-### Step 1: Install Dependencies (client & server)
+### Step 1: Install Dependencies (frontend & server)
 
 ```bash
 git clone https://github.com/jordansmalls/rat
 cd rat
 
-cd client && pnpm install
+cd frontend && pnpm install
 cd ..
 
 cd server && pnpm install
@@ -66,11 +66,11 @@ NEXT_PUBLIC_API_BASE=http://localhost:4000
 
 If you change the port you are serving your backend, or choose to host it elsewhere, update the frontend's API base URL with your actual API endpoint.
 
-### Step 3: Run Development Server (client & server)
+### Step 3: Run Development Server (frontend & server)
 
 ```bash
 # in one terminal window
-cd client && pnpm run dev
+cd frontend && pnpm run dev
 
 # in another terminal window
 cd server && pnpm run dev
@@ -88,9 +88,9 @@ Example Dashboard View
 
 <img src="./assets/dashboard-demo.png" width="600" alt="Example dashboard"/>
 
-Project Details Page
+Link Analytics Page
 
-<img src="./assets/project-demo.png" width="600" alt="Example Project Details Screen"/>
+<img src="./assets/link-analytics.png" width="600" alt="Example Project Details Screen"/>
 
 Campaign Details Page
 
@@ -101,12 +101,14 @@ Project Analytics Page
 <img src="./assets/project-analytics-demo.png" width="600" alt="Project analytics preview"/>
 
 
-## Client Filetree
+## Frontend Filetree
 
-The frontend is a Next.js App Router project that communicates with a REST API server. State is centralized with Zustand and all network calls flow through a typed API layer.
+The recommended implementation is in [`frontend/`](./frontend). It is the newer Next.js App Router application, communicates with the REST API server, centralizes state with Zustand, and routes network calls through a typed API layer.
+
+The older [`client/`](./client) application remains in the repository for reference, but new development and the quickstart instructions above should use `frontend/`.
 
 ```
-RAT/
+RAT/frontend/
 │
 ├── app/                                    # Next.js App Router (NO src/ directory)
 │   ├── layout.tsx                          # Root layout with Sidebar
@@ -176,7 +178,7 @@ RAT/
 - State managed by `stores/useProjectStore.ts`
 - Theme toggles in sidebar (persists to localStorage)
 
-##  Client Troubleshooting
+##  Frontend Troubleshooting
 
 - **API Errors**: Ensure server is running and `NEXT_PUBLIC_API_BASE` is correct.
 - **Build Errors**: Run `pnpm install` again
