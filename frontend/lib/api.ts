@@ -149,10 +149,12 @@ export const getClicksPerPlatform = async (
 }
 
 export const getGlobalReach = async (
-  projectId: string
+  projectId: string,
+  linkId?: string
 ): Promise<{ data: { country: string; count: number }[] }> => {
   const { data } = await api.get(
-    `/api/analytics/project/${projectId}/global-reach`
+    `/api/analytics/project/${projectId}/global-reach`,
+    { params: linkId ? { linkId } : undefined }
   )
   return { data: data.data || [] } // Extract from { message, data }
 }
@@ -185,10 +187,12 @@ export const getLoyalty = async (
 }
 
 export const getDeviceBreakdown = async (
-  projectId: string
+  projectId: string,
+  linkId?: string
 ): Promise<{ mobile: number; tablet: number; desktop: number }> => {
   const { data } = await api.get(
-    `/api/analytics/project/${projectId}/device-breakdown`
+    `/api/analytics/project/${projectId}/device-breakdown`,
+    { params: linkId ? { linkId } : undefined }
   )
   return {
     mobile: data.mobile || 0,
@@ -198,10 +202,12 @@ export const getDeviceBreakdown = async (
 }
 
 export const getRecentActivity = async (
-  projectId: string
+  projectId: string,
+  linkId?: string
 ): Promise<{ data: Click[] }> => {
   const { data } = await api.get(
-    `/api/analytics/project/${projectId}/recent-activity`
+    `/api/analytics/project/${projectId}/recent-activity`,
+    { params: linkId ? { linkId } : undefined }
   )
   return { data: data.data || [] } // Extract from { message, data }
 }
