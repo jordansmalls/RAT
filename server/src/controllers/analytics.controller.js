@@ -707,6 +707,18 @@
 import Click from "../models/click.model.js";
 import Campaign from "../models/campaign.model.js";
 import Link from "../models/link.model.js";
+import mongoose from "mongoose";
+
+const getClickMatch = (projectId, linkId) => {
+    if (!mongoose.isValidObjectId(projectId) || (linkId && !mongoose.isValidObjectId(linkId))) {
+        return null;
+    }
+
+    return {
+        project: new mongoose.Types.ObjectId(projectId),
+        ...(linkId && { link: new mongoose.Types.ObjectId(linkId) }),
+    };
+};
 
 /**
  * @desc    Get human confidence percentage
@@ -869,13 +881,14 @@ export const getClicksPerPlatform = async (req, res) => {
 export const getGlobalReach = async (req, res) => {
     try {
         const { projectId } = req.params;
+        const match = getClickMatch(projectId, req.query.linkId);
 
-        if (!projectId) {
-            return res.status(400).json({ message: "Project ID is required" });
+        if (!match) {
+            return res.status(400).json({ message: "A valid project ID is required" });
         }
 
         const result = await Click.aggregate([
-            { $match: { project: projectId } },
+            { $match: match },
             {
                 $group: {
                     _id: "$geo.country",
@@ -1035,12 +1048,13 @@ export const getLoyalty = async (req, res) => {
 export const getDeviceBreakdown = async (req, res) => {
     try {
         const { projectId } = req.params;
+        const match = getClickMatch(projectId, req.query.linkId);
 
-        if (!projectId) {
-            return res.status(400).json({ message: "Project ID is required" });
+        if (!match) {
+            return res.status(400).json({ message: "A valid project ID is required" });
         }
 
-        const total = await Click.countDocuments({ project: projectId });
+        const total = await Click.countDocuments(match);
 
         if (total === 0) {
             return res
@@ -1049,25 +1063,28 @@ export const getDeviceBreakdown = async (req, res) => {
         }
 
         const mobileCount = await Click.countDocuments({
-            project: projectId,
+            ...match,
             "device.type": "mobile",
         });
         const tabletCount = await Click.countDocuments({
-            project: projectId,
+            ...match,
             "device.type": "tablet",
         });
         const desktopCount = await Click.countDocuments({
-            project: projectId,
+            ...match,
             "device.type": "desktop",
         });
 
-        const mobile = parseFloat(((mobileCount / total) * 100).toFixed(1));
-        const tablet = parseFloat(((tabletCount / total) * 100).toFixed(1));
-        const desktop = parseFloat(((desktopCount / total) * 100).toFixed(1));
-
-        return res
-            .status(200)
-            .json({ message: "Device breakdown retrieved", mobile, tablet, desktop });
+        // The dashboard uses these values as chart values and to calculate the
+        // total click count, so return counts rather than percentages. Recharts
+        // calculates the slice proportions from the counts automatically.
+        return res.status(200).json({
+            message: "Device breakdown retrieved",
+            mobile: mobileCount,
+            tablet: tabletCount,
+            desktop: desktopCount,
+            total,
+        });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error" });
@@ -1082,13 +1099,14 @@ export const getDeviceBreakdown = async (req, res) => {
 export const getRecentActivity = async (req, res) => {
     try {
         const { projectId } = req.params;
+        const match = getClickMatch(projectId, req.query.linkId);
 
-        if (!projectId) {
-            return res.status(400).json({ message: "Project ID is required" });
+        if (!match) {
+            return res.status(400).json({ message: "A valid project ID is required" });
         }
 
         const clicks = await Click.aggregate([
-            { $match: { project: projectId } },
+            { $match: match },
             { $sort: { clickedAt: -1 } },
             { $limit: 10 },
             {
@@ -1103,7 +1121,10 @@ export const getRecentActivity = async (req, res) => {
             {
                 $project: {
                     _id: 0,
-                    country: "$geo.country",
+                    geo: 1,
+                    device: 1,
+                    browser: 1,
+                    os: 1,
                     platform: "$linkData.platform",
                     clickedAt: 1,
                 },
