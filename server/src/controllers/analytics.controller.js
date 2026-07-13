@@ -744,7 +744,7 @@ export const getHumanConfidence = async (req, res) => {
             isBot: false,
         });
 
-        const confidence = (humanClicks / total) * 100;
+        const confidence = (humanClicks / total);
 
         return res.status(200).json({
             message: "Human confidence calculated",
