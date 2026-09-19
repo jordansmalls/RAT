@@ -3,14 +3,8 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-  ChevronDownIcon,
-  ChevronRightIcon,
-  FolderIcon,
-} from "lucide-react"
+import { ChevronDownIcon, ChevronRightIcon, FolderIcon } from "lucide-react"
 
-import { getCampaigns } from "@/lib/api"
-import type { Campaign } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { useProjectStore } from "@/stores/useProjectStore"
 import {
@@ -27,89 +21,53 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-type CampaignsByProject = Record<string, Campaign[]>
-
 export function NavMain() {
   const pathname = usePathname()
   const { setOpenMobile } = useSidebar()
-  const { projects, fetchProjects, loading } = useProjectStore()
+  const {
+    projects,
+    fetchProjects,
+    projectsLoading,
+    projectsError,
+    campaignsByProject,
+    campaignsLoading,
+    campaignErrors,
+    fetchCampaigns,
+  } = useProjectStore()
   const [expandedProjects, setExpandedProjects] = React.useState<Set<string>>(
     () => new Set()
   )
-  const [campaignsByProject, setCampaignsByProject] =
-    React.useState<CampaignsByProject>({})
-  const [loadingCampaigns, setLoadingCampaigns] = React.useState<Set<string>>(
+  const [collapsedProjects, setCollapsedProjects] = React.useState<Set<string>>(
     () => new Set()
   )
-
+  const activeProject = pathname.match(/^\/projects\/([^/]+)(?:\/|$)/)?.[1]
   React.useEffect(() => {
     fetchProjects()
   }, [fetchProjects])
 
-  const loadProjectCampaigns = React.useCallback(
-    async (projectId: string) => {
-      if (campaignsByProject[projectId] || loadingCampaigns.has(projectId)) {
-        return
-      }
-
-      setLoadingCampaigns((current) => new Set(current).add(projectId))
-
-      try {
-        const campaigns = await getCampaigns(projectId)
-        setCampaignsByProject((current) => ({
-          ...current,
-          [projectId]: campaigns,
-        }))
-      } catch (error) {
-        console.error("Failed to fetch sidebar campaigns:", error)
-        setCampaignsByProject((current) => ({
-          ...current,
-          [projectId]: [],
-        }))
-      } finally {
-        setLoadingCampaigns((current) => {
-          const next = new Set(current)
-          next.delete(projectId)
-          return next
-        })
-      }
-    },
-    [campaignsByProject, loadingCampaigns]
-  )
-
-  const toggleProject = React.useCallback(
-    (projectId: string) => {
-      setExpandedProjects((current) => {
-        const next = new Set(current)
-        if (next.has(projectId)) {
-          next.delete(projectId)
-        } else {
-          next.add(projectId)
-          void loadProjectCampaigns(projectId)
-        }
-        return next
-      })
-    },
-    [loadProjectCampaigns]
-  )
-
   React.useEffect(() => {
-    const [, projectId] =
-      pathname.match(/^\/projects\/([^/]+)(?:\/|$)/) ?? []
+    if (activeProject && activeProject !== "new")
+      void fetchCampaigns(activeProject)
+  }, [activeProject, fetchCampaigns])
 
-    if (!projectId || projectId === "new") {
-      return
-    }
-
-    setExpandedProjects((current) => {
-      if (current.has(projectId)) {
-        return current
-      }
-
-      return new Set(current).add(projectId)
+  const toggleProject = (projectId: string) => {
+    const isExpanded =
+      !collapsedProjects.has(projectId) &&
+      (expandedProjects.has(projectId) || activeProject === projectId)
+    setCollapsedProjects((current) => {
+      const next = new Set(current)
+      if (isExpanded) next.add(projectId)
+      else next.delete(projectId)
+      return next
     })
-    void loadProjectCampaigns(projectId)
-  }, [loadProjectCampaigns, pathname])
+    setExpandedProjects((current) => {
+      const next = new Set(current)
+      if (isExpanded) next.delete(projectId)
+      else next.add(projectId)
+      return next
+    })
+    if (!isExpanded) void fetchCampaigns(projectId)
+  }
 
   const closeMobileSidebar = () => setOpenMobile(false)
 
@@ -131,8 +89,16 @@ export function NavMain() {
 
         <SidebarGroup className="p-0 group-data-[collapsible=icon]:hidden">
           <SidebarGroupLabel>Projects</SidebarGroupLabel>
+          {projectsError && (
+            <button
+              className="px-2 py-1 text-left text-xs text-destructive"
+              onClick={() => void fetchProjects()}
+            >
+              {projectsError} Retry
+            </button>
+          )}
           <SidebarMenu>
-            {loading && projects.length === 0 ? (
+            {projectsLoading && projects.length === 0 ? (
               <>
                 <SidebarMenuSkeleton showIcon />
                 <SidebarMenuSkeleton showIcon />
@@ -140,19 +106,22 @@ export function NavMain() {
               </>
             ) : projects.length === 0 ? (
               <SidebarMenuItem>
-                <div className="px-2 py-1.5 text-xs text-sidebar-foreground/60 opacity-0">
+                <div className="px-2 py-1.5 text-xs text-sidebar-foreground/60">
                   No projects yet.
                 </div>
               </SidebarMenuItem>
             ) : (
               projects.map((project) => {
                 const projectHref = `/projects/${project._id}`
-                const isExpanded = expandedProjects.has(project._id)
+                const isExpanded =
+                  !collapsedProjects.has(project._id) &&
+                  (expandedProjects.has(project._id) ||
+                    activeProject === project._id)
                 const isProjectActive =
                   pathname.startsWith(projectHref) &&
                   !pathname.includes("/campaigns/")
                 const projectCampaigns = campaignsByProject[project._id] ?? []
-                const isLoadingCampaigns = loadingCampaigns.has(project._id)
+                const isLoadingCampaigns = campaignsLoading[project._id]
 
                 return (
                   <SidebarMenuItem key={project._id}>
@@ -160,7 +129,7 @@ export function NavMain() {
                       <button
                         type="button"
                         className={cn(
-                          "flex size-7 shrink-0 items-center justify-center rounded-md text-sidebar-foreground/70 outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring tracking-tight"
+                          "flex size-7 shrink-0 items-center justify-center rounded-md tracking-tight text-sidebar-foreground/70 outline-hidden transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring"
                         )}
                         onClick={() => toggleProject(project._id)}
                         aria-expanded={isExpanded}
@@ -197,6 +166,15 @@ export function NavMain() {
                               Loading campaigns...
                             </div>
                           </SidebarMenuSubItem>
+                        ) : campaignErrors[project._id] ? (
+                          <SidebarMenuSubItem>
+                            <button
+                              className="px-2 py-1 text-xs text-destructive"
+                              onClick={() => void fetchCampaigns(project._id)}
+                            >
+                              Could not load. Retry
+                            </button>
+                          </SidebarMenuSubItem>
                         ) : projectCampaigns.length === 0 ? (
                           <SidebarMenuSubItem>
                             <div className="px-2 py-1.5 text-xs text-sidebar-foreground/60">
@@ -211,7 +189,10 @@ export function NavMain() {
                               <SidebarMenuSubItem key={campaign._id}>
                                 <SidebarMenuSubButton
                                   size="sm"
-                                  isActive={pathname === campaignHref}
+                                  isActive={
+                                    pathname === campaignHref ||
+                                    pathname.startsWith(`${campaignHref}/`)
+                                  }
                                   render={
                                     <Link
                                       href={campaignHref}

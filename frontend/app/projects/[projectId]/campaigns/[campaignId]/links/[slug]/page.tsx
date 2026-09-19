@@ -132,13 +132,19 @@ export default function LinkAnalyticsPage() {
   return (
     <div className="content-wrapper space-y-6 p-6 sm:p-8 lg:p-10">
       <div className="space-y-4">
-        <Button asChild variant="ghost" size="sm" className="gap-2">
-          <Link href={`/projects/${projectId}/campaigns/${campaignId}`}>
-            <div className="flex items-center gap-2">
-              <ArrowLeft size={16} />
-              <span>Back to Campaign</span>
-            </div>
-          </Link>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-2"
+          render={
+            <Link href={`/projects/${projectId}/campaigns/${campaignId}`} />
+          }
+          nativeButton={false}
+        >
+          <div className="flex items-center gap-2">
+            <ArrowLeft size={16} />
+            <span>Back to Campaign</span>
+          </div>
         </Button>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

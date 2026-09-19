@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -10,12 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Textarea } from "../ui/textarea"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
@@ -28,33 +23,34 @@ export function CreateProjectForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter()
+  const { createProject, loading } = useProjectStore()
+  const [formData, setFormData] = useState({
+    clientName: "",
+    description: "",
+  })
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-    const router = useRouter()
-      const { createProject, loading } = useProjectStore()
-      const [formData, setFormData] = useState({
-        clientName: "",
-        description: "",
+    if (!formData.clientName.trim()) {
+      toast.error("Oops! You forgot something.", {
+        description: "A name is required for your new project.",
       })
+      return
+    }
 
-
-      const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-
-
-        if (!formData.clientName.trim()) {
-          toast.error("Oops! You forgot something.", { description: "A name is required for your new project."})
-          return
-        }
-
-        try {
-          await createProject(formData)
-          router.push("/")
-        } catch (err) {
-          toast.error("Oops! Something went wrong.", { description: "We're having trouble creating the project, please try again."})
-          console.error(err)
-        }
-      }
+    try {
+      const project = await createProject(formData)
+      router.push(`/projects/${project._id}`)
+    } catch (err) {
+      toast.error("Oops! Something went wrong.", {
+        description:
+          "We're having trouble creating the project, please try again.",
+      })
+      console.error(err)
+    }
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -89,6 +85,7 @@ export function CreateProjectForm({
                   id="description"
                   placeholder="Brief description of this project..."
                   className="h-24 resize-none"
+                  required
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
@@ -107,10 +104,12 @@ export function CreateProjectForm({
                   )}
                 </Button>
 
-                <Button variant="outline" type="button">
-                  <Link href={"/"} className="w-full">
-                    Cancel
-                  </Link>
+                <Button
+                  variant="outline"
+                  render={<Link href={"/"} />}
+                  nativeButton={false}
+                >
+                  Cancel
                 </Button>
               </Field>
             </FieldGroup>

@@ -1,5 +1,6 @@
 "use client"
 
+import { useLayoutEffect, useRef } from "react"
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -41,15 +42,57 @@ const tabsListVariants = cva(
 function TabsList({
   className,
   variant = "default",
+  children,
   ...props
 }: TabsPrimitive.List.Props & VariantProps<typeof tabsListVariants>) {
+  const listRef = useRef<HTMLDivElement>(null)
+  const pillRef = useRef<HTMLSpanElement>(null)
+  useLayoutEffect(() => {
+    const list = listRef.current
+    const pill = pillRef.current
+    if (!list || !pill) return
+    let frame = 0
+    const snap = () => {
+      cancelAnimationFrame(frame)
+      pill.style.transition = "none"
+      frame = requestAnimationFrame(() => {
+        frame = requestAnimationFrame(() => {
+          pill.style.transition = ""
+        })
+      })
+    }
+    const observer = new ResizeObserver(snap)
+    observer.observe(list)
+    list
+      .querySelectorAll('[role="tab"]')
+      .forEach((tab) => observer.observe(tab))
+    snap()
+    return () => {
+      observer.disconnect()
+      cancelAnimationFrame(frame)
+    }
+  }, [])
   return (
     <TabsPrimitive.List
+      ref={listRef}
       data-slot="tabs-list"
       data-variant={variant}
-      className={cn(tabsListVariants({ variant }), className)}
+      className={cn(
+        tabsListVariants({ variant }),
+        variant === "default" && "t-tabs",
+        className
+      )}
       {...props}
-    />
+    >
+      {variant === "default" && (
+        <TabsPrimitive.Indicator
+          ref={pillRef}
+          className="t-tabs-pill"
+          aria-hidden="true"
+        />
+      )}
+      {children}
+    </TabsPrimitive.List>
   )
 }
 

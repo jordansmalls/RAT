@@ -1,0 +1,92 @@
+/* Interaction feedback, using the same timing across the workspace. */
+:root {
+  --motion-duration: 200ms;
+  --motion-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.t-tabs[data-variant="default"] {
+  position: relative;
+  isolation: isolate;
+  height: 36px;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--muted);
+}
+.t-tabs [data-slot="tabs-trigger"] {
+  z-index: 1;
+  height: 30px;
+  border-radius: 999px;
+  padding: 4px 14px;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  transition: color var(--motion-duration) ease-in;
+}
+.t-tabs-pill {
+  position: absolute;
+  left: 0;
+  top: 3px;
+  height: 30px;
+  width: var(--active-tab-width);
+  transform: translateX(var(--active-tab-left));
+  border-radius: 999px;
+  background: var(--background);
+  box-shadow: 0 1px 3px #00000014;
+  pointer-events: none;
+  transition: transform 250ms var(--motion-out), width 250ms var(--motion-out);
+}
+.dark .t-tabs-pill { background: var(--accent); }
+.tracking-table { min-width: 920px; }
+.tracking-table th { height: 42px; font-size: 11px; font-weight: 500; color: var(--muted-foreground); }
+.tracking-table td { padding-top: 15px; padding-bottom: 15px; }
+.tracking-row, [data-slot="sidebar-menu-button"], [data-slot="sidebar-menu-sub-button"] {
+  transition: background-color var(--motion-duration) ease-in, color var(--motion-duration) ease-in;
+}
+.table-select {
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+  color: var(--foreground);
+  padding: 0 10px;
+  font-size: 12px;
+}
+.table-select:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.velocity-meter { display: flex; gap: 2px; height: 17px; width: 98px; flex-shrink: 0; }
+.velocity-meter span { width: 3px; border-radius: 1px; background: var(--muted); }
+.velocity-meter .lit.meter-0 { background: #a3a3a3; }
+.velocity-meter .lit.meter-1 { background: #b5a947; }
+.velocity-meter .lit.meter-2 { background: #80ac56; }
+.velocity-meter .lit.meter-3 { background: #10b981; }
+.activity-bars { display: flex; align-items: end; gap: 3px; height: 27px; width: 93px; }
+.activity-bars span { flex: 1; border-radius: 1px 1px 0 0; background: #10b981; opacity: 0.7; }
+.activity-bars span:nth-last-child(-n+3) { opacity: 1; }
+.activity-bars span[data-empty="true"] { background: var(--muted-foreground); opacity: 0.2; }
+.copy-button { position: relative; }
+.copy-original { transition: opacity 150ms ease; }
+.copy-original[data-hidden="true"] { opacity: 0; }
+.t-success-check {
+  position: absolute;
+  display: inline-flex;
+  opacity: 0;
+  transform: translateY(4px) rotate(45deg) scale(0.9);
+  transition: opacity 200ms var(--motion-out), transform 250ms var(--motion-out);
+}
+.t-success-check[data-state="in"] { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+.t-success-check path { stroke-dasharray: 24; stroke-dashoffset: 24; transition: stroke-dashoffset 250ms var(--motion-out); }
+.t-success-check[data-state="in"] path { stroke-dashoffset: 0; }
+.t-digit-group { display: inline-flex; }
+.t-digit { display: inline-block; animation: digit-pop 250ms var(--motion-out) both; }
+@keyframes digit-pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@media (hover: hover) and (pointer: fine) {
+  [data-slot="button"]:active:not(:disabled) { transform: scale(0.98); }
+  .tracking-row:hover { background: color-mix(in oklch, var(--muted) 55%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+  .t-tabs-pill, .t-tabs [data-slot="tabs-trigger"], .t-success-check, .t-success-check path,
+  [data-slot="button"], .tracking-row, [data-slot="sidebar-menu-button"], [data-slot="sidebar-menu-sub-button"] { transition: none !important; }
+  .t-digit { animation: none; }
+  [data-slot="button"]:active { transform: none !important; }
+}

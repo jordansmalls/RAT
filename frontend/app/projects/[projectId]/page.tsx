@@ -57,8 +57,17 @@ export default function ProjectDetailPage() {
   const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null)
   const [editFormData, setEditFormData] = useState({ title: "", url: "" })
 
-  const { campaigns, fetchCampaigns, updateCampaign, deleteCampaign, loading } =
-    useProjectStore()
+  const {
+    projects,
+    campaignErrors,
+    campaignsByProject,
+    campaignsLoading,
+    fetchCampaigns,
+    updateCampaign,
+    deleteCampaign,
+  } = useProjectStore()
+  const campaigns = campaignsByProject[projectId] ?? []
+  const loading = campaignsLoading[projectId]
 
   // Analytics data
   const [analytics, setAnalytics] = useState({
@@ -130,16 +139,21 @@ export default function ProjectDetailPage() {
   return (
     <div className="content-wrapper space-y-8 p-6 sm:p-8 lg:p-10">
       <div>
-        <Button asChild variant="ghost" size="sm" className="mb-4 gap-2">
-          <Link href="/">
-            <div className="flex items-center gap-2">
-              <ArrowLeft size={16} />
-              <span>Back to Projects</span>
-            </div>
-          </Link>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="mb-4 gap-2"
+          render={<Link href="/" />}
+          nativeButton={false}
+        >
+          <div className="flex items-center gap-2">
+            <ArrowLeft size={16} />
+            <span>Back to Projects</span>
+          </div>
         </Button>
         <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-          Project Details
+          {projects.find((project) => project._id === projectId)?.clientName ||
+            "Project details"}
         </h1>
       </div>
 
@@ -152,18 +166,34 @@ export default function ProjectDetailPage() {
         {/* --- Campaigns Content View --- */}
         <TabsContent value="campaigns" className="space-y-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-2xl font-semibold tracking-tighter">Campaigns</h2>
-            <Button asChild size="sm" className="flex w-full gap-2 sm:w-auto">
-              <Link href={`/projects/${projectId}/campaigns/new`}>
-                <div className="flex items-center gap-1.5">
-                  <span>Create Campaign</span>
-                  <Plus size={16} />
-                </div>
-              </Link>
+            <h2 className="text-2xl font-semibold tracking-tighter">
+              Campaigns
+            </h2>
+            <Button
+              size="sm"
+              className="flex w-full gap-2 sm:w-auto"
+              render={<Link href={`/projects/${projectId}/campaigns/new`} />}
+              nativeButton={false}
+            >
+              <div className="flex items-center gap-1.5">
+                <span>Create Campaign</span>
+                <Plus size={16} />
+              </div>
             </Button>
           </div>
 
-          {loading ? (
+          {campaignErrors[projectId] && (
+            <p role="alert" className="text-sm text-destructive">
+              {campaignErrors[projectId]}{" "}
+              <button
+                className="underline"
+                onClick={() => void fetchCampaigns(projectId)}
+              >
+                Retry
+              </button>
+            </p>
+          )}
+          {loading && campaigns.length === 0 ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
@@ -193,7 +223,7 @@ export default function ProjectDetailPage() {
                       key={campaign._id}
                       campaign={campaign}
                       projectId={projectId}
-                      linkCount={9}
+                      linkCount={campaign.linkCount ?? 0}
                       onEdit={handleEdit}
                       onDelete={deleteCampaign}
                     />

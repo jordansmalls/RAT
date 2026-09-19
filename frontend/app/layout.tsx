@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google"
 import type { Metadata } from "next"
 import "./globals.css"
+import "./interactions.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { AppSidebar } from "@/components/app-sidebar"

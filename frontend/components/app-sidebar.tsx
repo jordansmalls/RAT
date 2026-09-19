@@ -16,13 +16,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import {
-  CircleHelpIcon,
-  DatabaseIcon,
-  FileChartColumnIcon,
-  FileIcon,
-  GitBranch,
-} from "lucide-react"
+import { CircleHelpIcon, GitBranch } from "lucide-react"
 
 const data = {
   navSecondary: [
@@ -63,6 +57,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <Button
           render={<Link href="/projects/new" />}
+          nativeButton={false}
           variant="default"
           className="w-full hover:cursor-pointer"
         >

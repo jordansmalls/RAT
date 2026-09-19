@@ -27,35 +27,39 @@ export function CreateLinkForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const params = useParams()
+  const router = useRouter()
+  const projectId = params.projectId as string
+  const campaignId = params.campaignId as string
 
-    const params = useParams()
-    const router = useRouter()
-    const projectId = params.projectId as string
-    const campaignId = params.campaignId as string
+  const { createLink, loading } = useProjectStore()
+  const [title, setTitle] = useState("")
 
-    const { createLink, loading } = useProjectStore()
-    const [title, setTitle] = useState("")
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault()
-
-      if (!title.trim()) {
-        toast.error("Oops! You forgot something.", { description: "A title for your link is required for creation."})
-        return
-      }
-
-      try {
-        await createLink({
-          project_id: projectId,
-          campaign_id: campaignId,
-          title,
-        })
-        router.push(`/projects/${projectId}/campaigns/${campaignId}`)
-      } catch (err) {
-        toast.error("Oops! Something went wrong.", { description: "We're having trouble creating the link, please try again soon."})
-        console.error(err)
-      }
+    if (!title.trim()) {
+      toast.error("Oops! You forgot something.", {
+        description: "A title for your link is required for creation.",
+      })
+      return
     }
+
+    try {
+      await createLink({
+        project_id: projectId,
+        campaign_id: campaignId,
+        title,
+      })
+      router.push(`/projects/${projectId}/campaigns/${campaignId}`)
+    } catch (err) {
+      toast.error("Oops! Something went wrong.", {
+        description:
+          "We're having trouble creating the link, please try again soon.",
+      })
+      console.error(err)
+    }
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -79,7 +83,7 @@ export function CreateLinkForm({
                   onChange={(e) => setTitle(e.target.value)}
                   required
                 />
-                <p className="text-[0.8rem] text-muted-foreground text-center">
+                <p className="text-center text-[0.8rem] text-muted-foreground">
                   A descriptive name to identify this tracking link.
                 </p>
               </Field>
@@ -94,10 +98,16 @@ export function CreateLinkForm({
                     "Create Link"
                   )}
                 </Button>
-                <Button variant="outline" type="button">
-                  <Link href={`/projects/${projectId}/campaigns/${campaignId}`} className="w-full">
-                    Cancel
-                  </Link>
+                <Button
+                  variant="outline"
+                  render={
+                    <Link
+                      href={`/projects/${projectId}/campaigns/${campaignId}`}
+                    />
+                  }
+                  nativeButton={false}
+                >
+                  Cancel
                 </Button>
               </Field>
             </FieldGroup>

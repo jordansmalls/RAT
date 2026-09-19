@@ -7,6 +7,7 @@ export interface Project {
 }
 
 export interface Campaign {
+  linkCount?: number
   _id: string
   project: string
   title: string
@@ -83,4 +84,24 @@ export interface AnalyticsData {
   dominance?: any
   velocity?: any
   heroCampaign?: any
+}
+
+export type PerformanceWindow = "24h" | "7d" | "30d"
+
+export interface LinkPerformance {
+  clicks: number
+  previousClicks: number
+  clicksPerHour: number
+  changePercent: number | null
+  sharePercent: number
+  velocityPercent: number
+  trend: number[]
+}
+
+export interface CampaignPerformance {
+  window: PerformanceWindow
+  start: string
+  end: string
+  bucketMs: number
+  links: (Link & { performance: LinkPerformance })[]
 }

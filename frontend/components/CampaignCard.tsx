@@ -70,10 +70,15 @@ export default function CampaignCard({
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
-          <Button asChild variant="outline" size="sm">
-            <Link href={`/projects/${projectId}/campaigns/${campaign._id}`}>
-              View
-            </Link>
+          <Button
+            variant="outline"
+            size="sm"
+            render={
+              <Link href={`/projects/${projectId}/campaigns/${campaign._id}`} />
+            }
+            nativeButton={false}
+          >
+            View
           </Button>
           <Button
             onClick={() => onEdit(campaign)}

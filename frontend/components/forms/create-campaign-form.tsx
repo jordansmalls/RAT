@@ -10,24 +10,13 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
-import { Textarea } from "../ui/textarea"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { useProjectStore } from "@/stores/useProjectStore"
-import { AlertCircle, ArrowLeft } from "lucide-react"
 import Link from "next/link"
-import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-
-
-
 
 export function CreateCampaignForm({
   className,
@@ -46,22 +35,25 @@ export function CreateCampaignForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-
     if (!formData.title.trim() || !formData.url.trim()) {
-
-      toast.error("Oops! Something went wrong.", { description: "All fields are required to create a new campaign."})
+      toast.error("Oops! Something went wrong.", {
+        description: "All fields are required to create a new campaign.",
+      })
       return
     }
 
     try {
-      await createCampaign({
+      const campaign = await createCampaign({
         project_id: projectId,
         title: formData.title,
         url: formData.url,
       })
-      router.push(`/projects/${projectId}`)
+      router.push(`/projects/${projectId}/campaigns/${campaign._id}`)
     } catch (err) {
-      toast.error("Oops! Something went wrong.", { description: "There was an error attempting to create the campaign. Please try again."})
+      toast.error("Oops! Something went wrong.", {
+        description:
+          "There was an error attempting to create the campaign. Please try again.",
+      })
       console.error(err)
     }
   }
@@ -120,9 +112,13 @@ export function CreateCampaignForm({
                     "Create Campaign"
                   )}
                 </Button>
-                  <Button variant="outline" type="button">
-                    <Link href={`/projects/${projectId}`} className="w-full">Cancel</Link>
-                  </Button>
+                <Button
+                  variant="outline"
+                  render={<Link href={`/projects/${projectId}`} />}
+                  nativeButton={false}
+                >
+                  Cancel
+                </Button>
               </Field>
             </FieldGroup>
           </form>

@@ -1,5 +1,5 @@
 import axios from "axios"
-import type { Project, Campaign, Link, Click, AnalyticsData } from "./types"
+import type { Project, Campaign, Link, Click, AnalyticsData, PerformanceWindow, CampaignPerformance } from "./types"
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000"
 
@@ -71,7 +71,7 @@ export const createCampaign = async (body: {
   url: string
 }): Promise<{ campaign: Campaign; links: Link[] }> => {
   const { data } = await api.post("/api/campaigns", body)
-  return { campaign: data.campaign, links: data.links } // Extract from { message, campaign, links }
+  return { campaign: { ...data.campaign, linkCount: data.links.length }, links: data.links } // Extract from { message, campaign, links }
 }
 
 export const getCampaign = async (id: string): Promise<Campaign> => {
@@ -266,4 +266,16 @@ export const getMonthlyHealth = async (
     velocity: data.velocity,
     heroCampaign: data.heroCampaign,
   } // Extract from { message, networkEffect, dominance, velocity, heroCampaign }
+}
+
+export const getCampaignPerformance = async (
+  campaignId: string,
+  window: PerformanceWindow,
+  signal?: AbortSignal
+): Promise<CampaignPerformance> => {
+  const { data } = await api.get(`/api/campaigns/${campaignId}/performance`, {
+    params: { window },
+    signal,
+  })
+  return data
 }

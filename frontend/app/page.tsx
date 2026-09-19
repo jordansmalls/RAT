@@ -8,13 +8,19 @@ import ProjectCard from "@/components/ProjectCard"
 import { Button } from "@/components/ui/button"
 
 export default function HomePage() {
-  const { projects, loading, fetchProjects, deleteProject } = useProjectStore()
+  const {
+    projects,
+    projectsLoading,
+    projectsError,
+    fetchProjects,
+    deleteProject,
+  } = useProjectStore()
 
   useEffect(() => {
     fetchProjects()
   }, [fetchProjects])
 
-  if (loading) {
+  if (projectsLoading && projects.length === 0) {
     return (
       <div className="content-wrapper flex min-h-[60vh] items-center justify-center p-6 sm:p-8 lg:p-10">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -34,14 +40,26 @@ export default function HomePage() {
           </p>
         </div>
 
-        <Button asChild className="w-full sm:w-auto">
-          <Link href="/projects/new" className="flex items-center gap-2">
-            New Project
-            <Plus size={18} />
-          </Link>
+        <Button
+          className="w-full sm:w-auto"
+          render={
+            <Link href="/projects/new" className="flex items-center gap-2" />
+          }
+          nativeButton={false}
+        >
+          New Project
+          <Plus size={18} />
         </Button>
       </div>
 
+      {projectsError && (
+        <p role="alert" className="mb-4 text-sm text-destructive">
+          {projectsError}{" "}
+          <button onClick={() => void fetchProjects()} className="underline">
+            Retry
+          </button>
+        </p>
+      )}
       {projects.length === 0 ? (
         <div className="flex flex-col items-center rounded-lg border bg-card px-6 py-16 text-center shadow-sm">
           <h2 className="mb-2 text-2xl font-semibold tracking-tight">
@@ -51,11 +69,14 @@ export default function HomePage() {
             Create your first project to start tracking campaign links and
             analyzing performance.
           </p>
-          <Button asChild>
-            <Link href="/projects/new" className="flex items-center gap-2">
-              Create your first project
-              <Plus size={18} />
-            </Link>
+          <Button
+            render={
+              <Link href="/projects/new" className="flex items-center gap-2" />
+            }
+            nativeButton={false}
+          >
+            Create your first project
+            <Plus size={18} />
           </Button>
         </div>
       ) : (
