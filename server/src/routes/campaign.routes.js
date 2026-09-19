@@ -6,6 +6,7 @@ import {
     deleteCampaign,
     fetchAllCampaigns,
     fetchCampaignLinks,
+    fetchCampaignPerformance,
     createLinkManual,
 } from "../controllers/campaign.controller.js";
 const router = e.Router();
@@ -18,6 +19,7 @@ router.get("/", fetchAllCampaigns);
 // @route   GET /api/campaigns/:campaign_id/links
 // @access  public
 router.get("/:campaign_id/links", fetchCampaignLinks);
+router.get("/:campaign_id/performance", fetchCampaignPerformance);
 
 // @desc    create new campaign
 // @route   POST /api/campaigns

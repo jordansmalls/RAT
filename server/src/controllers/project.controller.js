@@ -200,7 +200,12 @@ export const fetchProjectCampaigns = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials: invalid project_id" });
         }
 
-        const campaigns = await Campaign.find({ project: project_id }).sort({ createdAt: -1 });
+        const campaigns = await Campaign.find({ project: project_id }).sort({ createdAt: -1 }).lean();
+        const counts = await Link.aggregate([
+            { $match: { project: new mongoose.Types.ObjectId(project_id) } },
+            { $group: { _id: "$campaign", count: { $sum: 1 } } },
+        ]);
+        const countsByCampaign = new Map(counts.map((row) => [String(row._id), row.count]));
 
         if (campaigns.length === 0) {
             return res.status(404).json({ message: "No campaigns found." });
@@ -208,7 +213,7 @@ export const fetchProjectCampaigns = async (req, res) => {
 
         return res.status(200).json({
             message: `${campaigns.length} campaigns found for this project.`,
-            campaigns,
+            campaigns: campaigns.map((campaign) => ({ ...campaign, linkCount: countsByCampaign.get(String(campaign._id)) || 0 })),
         });
     } catch (err) {
         console.error("Error fetching project campaigns:", err);

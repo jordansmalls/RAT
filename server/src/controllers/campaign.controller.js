@@ -1,3 +1,4 @@
+import { performanceWindow, summarizeLinkPerformance } from "../utils/link-performance.js";
 import Campaign from "../models/campaign.model.js";
 import Project from "../models/project.model.js";
 import Link from "../models/link.model.js";
@@ -41,6 +42,7 @@ export const createCampaign = async (req, res) => {
         } else {
             // create a custom link for each platform
             const platforms = [
+                "youtube",
                 "tiktok",
                 "twitter",
                 "instagram",
@@ -281,5 +283,46 @@ export const fetchCampaignLinks = async (req, res) => {
     } catch (err) {
         console.error("Error fetching all campaign links:", err);
         return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+// GET /api/campaigns/:campaign_id/performance?window=24h|7d|30d
+export const fetchCampaignPerformance = async (req, res) => {
+    const { campaign_id } = req.params;
+    const period = performanceWindow(req.query.window || "24h");
+    if (!mongoose.Types.ObjectId.isValid(campaign_id) || !period) {
+        return res.status(400).json({ message: "Use a valid campaign ID and a window of 24h, 7d, or 30d." });
+    }
+    try {
+        if (!await Campaign.exists({ _id: campaign_id })) {
+            return res.status(404).json({ message: "Campaign not found." });
+        }
+        const [links, rows] = await Promise.all([
+            Link.find({ campaign: campaign_id }).sort({ createdAt: 1 }).lean(),
+            Click.aggregate([
+                { $match: {
+                    campaign: new mongoose.Types.ObjectId(campaign_id),
+                    isBot: { $ne: true },
+                    clickedAt: { $gte: period.previousStart, $lt: period.end },
+                } },
+                { $group: {
+                    _id: {
+                        link: "$link",
+                        bucket: { $floor: { $divide: [{ $subtract: ["$clickedAt", period.start] }, period.bucketMs] } },
+                    },
+                    count: { $sum: 1 },
+                } },
+            ]),
+        ]);
+        return res.status(200).json({
+            window: period.window,
+            start: period.start,
+            end: period.end,
+            bucketMs: period.bucketMs,
+            links: summarizeLinkPerformance(links, rows, period),
+        });
+    } catch (error) {
+        console.error("Error fetching campaign performance:", error);
+        return res.status(500).json({ message: "Could not load campaign performance." });
     }
 };

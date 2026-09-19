@@ -23,6 +23,7 @@ const linkSchema = new mongoose.Schema(
             type: String,
             required: true,
             enum: [
+                "youtube",
                 "tiktok",
                 "twitter",
                 "instagram",
