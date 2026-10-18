@@ -1,0 +1,388 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 650;
+  --text-xs: 0.75rem;
+  --text-sm: 0.84375rem;
+  --text-base: 0.84375rem;
+  --text-lg: 0.875rem;
+  --text-xl: 0.875rem;
+  --text-2xl: 0.875rem;
+  --text-3xl: 0.875rem;
+  --text-4xl: 0.875rem;
+  --font-heading: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-serif: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-mono: var(--font-inter), Inter, system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+  --tracking-normal: 0.01em;
+  --shadow-2xl: var(--shadow-2xl);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-md: var(--shadow-md);
+  --shadow: var(--shadow);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-2xs: var(--shadow-2xs);
+  --spacing: var(--spacing);
+  --letter-spacing: var(--letter-spacing);
+  --shadow-offset-y: var(--shadow-offset-y);
+  --shadow-offset-x: var(--shadow-offset-x);
+  --shadow-spread: var(--shadow-spread);
+  --shadow-blur: var(--shadow-blur);
+  --shadow-opacity: var(--shadow-opacity);
+  --color-shadow-color: var(--shadow-color);
+  --color-destructive-foreground: var(--destructive-foreground);
+}
+
+:root {
+  /* RAT design system: Inter + primary #606AD6 on cool near-white canvas. */
+  --background: oklch(0.9703 0.0083 271.329);
+  --foreground: oklch(0.0672 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.0672 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.0672 0 0);
+  --primary: #606ad6;
+  --primary-foreground: oklch(0.9698 0.0057 264.5324);
+  --secondary: oklch(0.1448 0 0);
+  --secondary-foreground: oklch(0.9758 0.0057 264.5326);
+  --muted: oklch(0.9702 0 0);
+  --muted-foreground: oklch(0.3904 0 0);
+  --accent: #606ad6;
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.4386 0.1753 14.1958);
+  --border: oklch(0.9158 0 0);
+  --input: oklch(0.87 0 0);
+  --ring: #606ad6;
+  --chart-1: oklch(0.4774 0.1654 256.4882);
+  --chart-2: oklch(0.7479 0.1375 176.0249);
+  --chart-3: oklch(0.6342 0.2449 325.1505);
+  --chart-4: oklch(0.4635 0.1206 39.4515);
+  --chart-5: oklch(0.6645 0.1195 176.9037);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.2244 0.0722 254.3366);
+  --sidebar-foreground: oklch(0.9714 0.0094 279.6908);
+  --sidebar-primary: #606ad6;
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: #606ad6;
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.8699 0 0);
+  --sidebar-ring: #606ad6;
+  --destructive-foreground: oklch(1 0 0);
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-serif: var(--font-inter), Inter, system-ui, sans-serif;
+  --shadow-color: #1a2137;
+  --shadow-opacity: 0.05;
+  --shadow-blur: 2px;
+  --shadow-spread: 0px;
+  --shadow-offset-x: 0;
+  --shadow-offset-y: 1px;
+  --letter-spacing: 0.01em;
+  --spacing: 0.25rem;
+  --shadow-2xs: 0 1px 2px 0px hsl(225.5172 35.8025% 15.8824% / 0.03);
+  --shadow-xs: 0 1px 2px 0px hsl(225.5172 35.8025% 15.8824% / 0.03);
+  --shadow-sm:
+    0 1px 2px 0px hsl(225.5172 35.8025% 15.8824% / 0.05), 0 1px 2px -1px hsl(225.5172 35.8025% 15.8824% / 0.05);
+  --shadow: 0 1px 2px 0px hsl(225.5172 35.8025% 15.8824% / 0.05), 0 1px 2px -1px hsl(225.5172 35.8025% 15.8824% / 0.05);
+  --shadow-md:
+    0 1px 2px 0px hsl(225.5172 35.8025% 15.8824% / 0.05), 0 2px 4px -1px hsl(225.5172 35.8025% 15.8824% / 0.05);
+  --shadow-lg:
+    0 1px 2px 0px hsl(225.5172 35.8025% 15.8824% / 0.05), 0 4px 6px -1px hsl(225.5172 35.8025% 15.8824% / 0.05);
+  --shadow-xl:
+    0 1px 2px 0px hsl(225.5172 35.8025% 15.8824% / 0.05), 0 8px 10px -1px hsl(225.5172 35.8025% 15.8824% / 0.05);
+  --shadow-2xl: 0 1px 2px 0px hsl(225.5172 35.8025% 15.8824% / 0.13);
+  --tracking-normal: 0.01em;
+  --font-mono: var(--font-inter), Inter, system-ui, sans-serif;
+}
+
+.dark {
+  /* RAT design system dark mode. */
+  --background: #0f0f11;
+  --foreground: oklch(0.9851 0 0);
+  --card: #0f0f11;
+  --card-foreground: oklch(0.9851 0 0);
+  --popover: #1c1e1f;
+  --popover-foreground: oklch(0.9851 0 0);
+  --primary: #606ad6;
+  --primary-foreground: oklch(0.9851 0 0);
+  --secondary: #1c1e1f;
+  --secondary-foreground: oklch(0.9851 0 0);
+  --muted: #1c1e1f;
+  --muted-foreground: #909091;
+  --accent: #606ad6;
+  --accent-foreground: oklch(0.9851 0 0);
+  --destructive: oklch(0.6496 0.1202 12.3014);
+  --border: oklch(0.2768 0 0);
+  --input: oklch(1 0 0 / 20%);
+  --ring: #606ad6;
+  --chart-1: #606ad6;
+  --chart-2: oklch(0.5196 0.1801 260.0927);
+  --chart-3: oklch(0.4532 0.1101 122.1507);
+  --chart-4: oklch(0.65 0.1195 40.0066);
+  --chart-5: oklch(0.7008 0.0999 180.0402);
+  --sidebar: #090909;
+  --sidebar-foreground: #d6d6d9;
+  --sidebar-primary: #606ad6;
+  --sidebar-primary-foreground: oklch(0.9851 0 0);
+  --sidebar-accent: #1e1e20;
+  --sidebar-accent-foreground: oklch(0.9851 0 0);
+  --sidebar-border: #1e1e20;
+  --sidebar-ring: #606ad6;
+  --destructive-foreground: oklch(0.9851 0 0);
+  --radius: 0.625rem;
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-serif: var(--font-inter), Inter, system-ui, sans-serif;
+  --shadow-color: #000000;
+  --shadow-opacity: 0.05;
+  --shadow-blur: 2px;
+  --shadow-spread: 0px;
+  --shadow-offset-x: 0;
+  --shadow-offset-y: 1px;
+  --letter-spacing: 0.01em;
+  --spacing: 0.25rem;
+  --shadow-2xs: 0 1px 2px 0px hsl(0 0% 0% / 0.03);
+  --shadow-xs: 0 1px 2px 0px hsl(0 0% 0% / 0.03);
+  --shadow-sm: 0 1px 2px 0px hsl(0 0% 0% / 0.05), 0 1px 2px -1px hsl(0 0% 0% / 0.05);
+  --shadow: 0 1px 2px 0px hsl(0 0% 0% / 0.05), 0 1px 2px -1px hsl(0 0% 0% / 0.05);
+  --shadow-md: 0 1px 2px 0px hsl(0 0% 0% / 0.05), 0 2px 4px -1px hsl(0 0% 0% / 0.05);
+  --shadow-lg: 0 1px 2px 0px hsl(0 0% 0% / 0.05), 0 4px 6px -1px hsl(0 0% 0% / 0.05);
+  --shadow-xl: 0 1px 2px 0px hsl(0 0% 0% / 0.05), 0 8px 10px -1px hsl(0 0% 0% / 0.05);
+  --shadow-2xl: 0 1px 2px 0px hsl(0 0% 0% / 0.13);
+  --font-mono: var(--font-inter), Inter, system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    font:
+      100%/1.5 var(--font-inter),
+      Inter,
+      system-ui,
+      sans-serif;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-inter), Inter, system-ui, sans-serif;
+    font-size: 0.84375rem;
+    font-weight: var(--type-weight-medium);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    font-optical-sizing: auto;
+  }
+}
+
+/* Inter throughout. Only 400, 500, and 650; sizes follow the dashboard scale. */
+:root {
+  --type-weight-regular: 400;
+  --type-weight-medium: 500;
+  --type-weight-semibold: 650;
+  --type-tracking-display: -0.02em;
+  --type-tracking-heading: -0.025em;
+  --type-tracking-label: -0.02em;
+  --type-tracking-body: 0.01em;
+
+  /* Custom curves — default ease / ease-in-out look basic, use these instead. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* 8px base grid; 24px default container/card padding; 24px surface radius. */
+  --container-padding: 1.5rem;
+  --surface-radius: 1.5rem;
+  --surface-padding: 1.5rem;
+  --surface-inset: 1.5rem;
+}
+
+@layer components {
+  .display {
+    font-family: var(--font-inter), Inter, system-ui, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: var(--type-weight-medium);
+    font-optical-sizing: auto;
+    text-wrap: balance;
+  }
+  .type-page-title {
+    font-size: 0.875rem;
+    line-height: 1.1;
+    font-weight: var(--type-weight-medium);
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .type-section-title {
+    font-size: 0.875rem;
+    line-height: 1.25;
+    font-weight: var(--type-weight-medium);
+    letter-spacing: -0.02em;
+  }
+  .type-card-title {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    font-weight: var(--type-weight-medium);
+    letter-spacing: var(--type-tracking-label);
+  }
+  .type-eyebrow {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    font-weight: var(--type-weight-medium);
+    letter-spacing: -0.02em;
+    color: var(--muted-foreground);
+  }
+  .type-metric {
+    font-size: 0.875rem;
+    line-height: 1.15;
+    font-weight: var(--type-weight-medium);
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+  }
+  .type-emphasis {
+    font-weight: var(--type-weight-medium);
+    letter-spacing: var(--type-tracking-label);
+  }
+  .type-body {
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+  }
+  .type-caption {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+  }
+}
+
+/* Translucency: floating layers, not opaque bars. Content scrolls under. */
+@layer components {
+  .translucent-bar {
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 8px 30px -12px rgb(0 0 0 / 0.25);
+  }
+  .dark .translucent-bar {
+    box-shadow: 0 12px 40px -12px rgb(0 0 0 / 0.7);
+  }
+  /* Scroll edge instead of a hard 1px divider where floating UI meets content. */
+  .translucent-bar::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset-inline: 0;
+    bottom: -12px;
+    height: 12px;
+    background: linear-gradient(to bottom, rgb(0 0 0 / 0.06), transparent);
+  }
+  .dark .translucent-bar::after {
+    background: linear-gradient(to bottom, rgb(0 0 0 / 0.4), transparent);
+  }
+  /* Heavier material for structural regions (sidebars, sheets). */
+  .translucent-heavy {
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    backdrop-filter: blur(28px) saturate(180%);
+    box-shadow: 0 24px 70px -20px rgb(0 0 0 / 0.45);
+  }
+  /* Vibrancy: legible text on blurred surfaces — higher contrast, slightly heavier, wider tracking. */
+  .vibrant-text {
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+  /* Row titles set vertical rhythm with line-height, not extra margin/padding. */
+  .row-title {
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+  }
+}
+
+/* Bordered lists: no gaps between items; hide the border next to the hovered item. */
+@layer components {
+  .bordered-list {
+    border-collapse: collapse;
+  }
+  .bordered-list tbody tr {
+    border-bottom: 1px solid var(--border);
+  }
+  .bordered-list tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .bordered-list tbody tr:hover {
+    border-bottom-color: transparent;
+  }
+  .bordered-list tbody tr:hover + tr {
+    border-top-color: transparent;
+  }
+  .bordered-list tbody tr:hover + tr > td,
+  .bordered-list tbody tr:hover + tr > th {
+    border-top-color: transparent;
+  }
+}
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  b,
+  strong {
+    font-weight: 650;
+  }
+}
+[data-sonner-toaster] {
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
+}

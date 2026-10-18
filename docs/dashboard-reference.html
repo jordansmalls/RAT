@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<!-- Design reference for the RAT dashboard (Linear-style list view). Not shipped; used as a visual spec. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Test Blog Workspace — Linear</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;650&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wallpaper-1:#a9b7f5;
+  --wallpaper-2:#7c8cf0;
+  --sidebar-bg:#090909;
+  --bg:#101010;
+  --surface:#161616;
+  --surface-2:#1c1c1c;
+  --surface-3:#242424;
+  --border:rgba(255,255,255,0.07);
+  --border-hover:rgba(255,255,255,0.14);
+  --text:#eaeaea;
+  --text-dim:#8a8a8f;
+  --text-faint:#5a5a5e;
+  --accent:#5e6ad2;
+  --accent-dim:rgba(94,106,210,0.16);
+
+  --dropdown-dur:170ms;
+  --dropdown-ease:cubic-bezier(0.23,1,0.32,1);
+  --press-dur:110ms;
+  --press-ease:cubic-bezier(0.23,1,0.32,1);
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  background:var(--sidebar-bg);
+  color:var(--text);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important;}}
+
+.window{
+  width:100vw;height:100vh;
+  background:var(--sidebar-bg);
+  display:flex;
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+}
+
+/* ---------------- sidebar ---------------- */
+.sidebar{
+  width:248px;flex-shrink:0;background:var(--sidebar-bg);
+  display:flex;flex-direction:column;
+  padding:14px 12px;height:100%;overflow-y:auto;font-size:13.5px;
+}
+.ws-switcher{
+  display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;
+  transition:background var(--dropdown-dur) var(--dropdown-ease);
+}
+.ws-switcher:hover{background:var(--surface-2);}
+.ws-mark{
+  width:22px;height:22px;border-radius:6px;flex-shrink:0;
+  background:linear-gradient(135deg,#6e7bf2,#4b57c9);
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:650;color:#fff;
+}
+.ws-name{font-weight:600;font-size:13.5px;flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chev{color:var(--text-faint);font-size:10px;}
+
+.icon-row{display:flex;gap:4px;margin-left:auto;}
+.mini-btn{
+  width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-dim);cursor:pointer;transition:background var(--dropdown-dur) var(--dropdown-ease),color var(--dropdown-dur) var(--dropdown-ease);
+}
+.mini-btn:hover{background:var(--surface-2);color:var(--text);}
+.mini-btn svg{width:14px;height:14px;}
+.mini-btn.round{border-radius:50%;background:var(--surface-3);}
+
+.sb-top-row{display:flex;align-items:center;padding:2px 4px 12px;}
+
+.nav-group{display:flex;flex-direction:column;gap:1px;margin-bottom:14px;}
+.nav-item{
+  display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:7px;
+  color:var(--text-dim);cursor:pointer;user-select:none;
+  transition:background var(--dropdown-dur) var(--dropdown-ease),color var(--dropdown-dur) var(--dropdown-ease);
+}
+.nav-item:hover{background:var(--surface-2);color:var(--text);}
+.nav-item.active{color:var(--text);background:var(--surface-2);}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;color:var(--text-faint);}
+.nav-item.active svg{color:var(--text-dim);}
+
+.sb-section-head{
+  display:flex;align-items:center;gap:4px;padding:10px 8px 6px;
+  color:var(--text-faint);font-size:12px;font-weight:500;cursor:pointer;user-select:none;
+}
+.sb-section-head:hover{color:var(--text-dim);}
+.sb-section-head svg{width:10px;height:10px;}
+
+.team-block{margin-top:6px;}
+.team-head{
+  display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;cursor:pointer;color:var(--text);font-weight:500;
+  transition:background var(--dropdown-dur) var(--dropdown-ease);
+}
+.team-head:hover{background:var(--surface-2);}
+.team-mark{width:16px;height:16px;border-radius:5px;background:#2f6f5e;flex-shrink:0;font-size:9px;display:flex;align-items:center;justify-content:center;}
+.team-children{margin-left:14px;display:flex;flex-direction:column;gap:1px;margin-top:2px;}
+
+.sb-foot{margin-top:auto;padding-top:10px;}
+.help-btn{
+  width:26px;height:26px;border-radius:50%;background:var(--surface-2);color:var(--text-faint);
+  display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;
+}
+
+/* ---------------- main ---------------- */
+.main{
+  flex:1;min-width:0;display:flex;flex-direction:column;
+  height:calc(100vh - 16px);
+  margin:8px 8px 8px 0;
+  background:var(--bg);
+  border-radius:12px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 0 0 1px var(--border);
+}
+
+.topbar{
+  display:flex;align-items:center;gap:8px;padding:14px 20px;
+  border-bottom:1px solid transparent;flex-shrink:0;
+}
+.crumb{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--text);font-weight:500;}
+.crumb .dim{color:var(--text-dim);font-weight:500;}
+.crumb svg.chevr{width:12px;height:12px;color:var(--text-faint);}
+.crumb-icon{width:15px;height:15px;color:var(--text-dim);}
+.crumb-more{
+  width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-faint);cursor:pointer;
+}
+.crumb-more:hover{background:var(--surface-2);color:var(--text-dim);}
+
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:6px;}
+
+.filter-row{display:flex;align-items:center;gap:8px;padding:4px 20px 14px;flex-shrink:0;}
+.filter-btn{
+  display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:7px;
+  color:var(--text-dim);font-size:13px;font-weight:500;cursor:pointer;
+  transition:background var(--dropdown-dur) var(--dropdown-ease),color var(--dropdown-dur) var(--dropdown-ease);
+}
+.filter-btn:hover{background:var(--surface-2);color:var(--text);}
+.filter-btn svg{width:14px;height:14px;}
+
+.display-btn{
+  margin-left:auto;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:7px;
+  color:var(--text-dim);font-size:13px;font-weight:500;cursor:pointer;background:transparent;border:none;
+  transition:background var(--dropdown-dur) var(--dropdown-ease);
+  position:relative;
+}
+.display-btn:hover{background:var(--surface-2);color:var(--text);}
+.display-btn.active{background:var(--surface-2);color:var(--text);}
+
+/* ---------------- list content ---------------- */
+.list-wrap{flex:1;overflow-y:auto;padding:0 20px 20px;}
+
+.group-head{
+  display:flex;align-items:center;gap:8px;padding:9px 8px;border-radius:7px;
+  cursor:pointer;user-select:none;color:var(--text);font-weight:500;font-size:13.5px;
+  transition:background 150ms ease;
+}
+.group-head:hover{background:var(--surface-2);}
+.group-head:hover .add-issue{opacity:1;}
+.status-dot{width:14px;height:14px;flex-shrink:0;}
+.group-count{color:var(--text-faint);font-weight:500;}
+.add-issue{
+  margin-left:auto;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-faint);opacity:0;transition:opacity 150ms ease,background 150ms ease;
+}
+.add-issue:hover{background:var(--surface-3);}
+
+.issue-row{
+  display:grid;grid-template-columns:20px 56px 16px 1fr auto auto;align-items:center;gap:10px;
+  padding:9px 8px;border-radius:7px;font-size:13.5px;cursor:pointer;
+  transition:background 130ms ease;
+}
+.issue-row:hover{background:var(--surface-2);}
+.issue-row:hover .row-avatar{background:var(--surface-3);}
+.prio{width:15px;height:15px;color:var(--text-faint);}
+.issue-id{color:var(--text-faint);font-size:12.5px;font-weight:500;}
+.state-circle{width:15px;height:15px;color:var(--text-dim);flex-shrink:0;}
+.state-circle.done{color:#5e6ad2;}
+.issue-title{color:var(--text);font-weight:450;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.issue-date{color:var(--text-faint);font-size:12.5px;white-space:nowrap;}
+.row-avatar{
+  width:22px;height:22px;border-radius:50%;background:var(--surface-2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;color:var(--text-faint);
+  transition:background 130ms ease;
+}
+.row-avatar svg{width:12px;height:12px;}
+.row-avatar.filled{background:#2f9e6e;color:#eafff4;font-size:10px;font-weight:650;}
+
+/* ---------------- display panel ---------------- */
+.overlay{position:absolute;inset:0;background:transparent;z-index:5;}
+
+.panel{
+  position:absolute;top:52px;right:20px;width:260px;
+  background:rgba(28,28,28,0.95);backdrop-filter:blur(18px) saturate(160%);
+  border:1px solid var(--border);border-radius:12px;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+  padding:8px;z-index:10;
+  transform-origin:top right;
+  transform:scale(0.95) translateY(-6px);opacity:0;pointer-events:none;
+  transition:transform 170ms var(--dropdown-ease),opacity 170ms var(--dropdown-ease);
+}
+.panel.open{transform:scale(1) translateY(0);opacity:1;pointer-events:auto;}
+
+.view-toggle{display:flex;gap:6px;padding:2px 2px 10px;}
+.view-opt{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:10px 0 8px;border-radius:8px;border:1px solid var(--border);
+  color:var(--text-dim);font-size:12px;font-weight:500;cursor:pointer;background:var(--surface);
+  transition:border-color 150ms ease,color 150ms ease,background 150ms ease;
+}
+.view-opt:hover{border-color:var(--border-hover);}
+.view-opt.active{color:var(--text);border-color:var(--accent);background:var(--accent-dim);}
+.view-opt svg{width:16px;height:16px;}
+
+.panel-row{
+  display:flex;align-items:center;justify-content:space-between;padding:7px 6px;
+  font-size:12.5px;color:var(--text-dim);
+}
+.panel-row > span:first-child{display:flex;align-items:center;gap:6px;}
+.panel-row svg{width:13px;height:13px;color:var(--text-faint);}
+
+.mini-select{
+  display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;
+  background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:12px;font-weight:500;
+  cursor:pointer;
+}
+.mini-select svg{width:10px;height:10px;color:var(--text-faint);}
+
+.toggle{
+  width:28px;height:16px;border-radius:100px;background:var(--surface-3);position:relative;cursor:pointer;
+  transition:background 150ms ease;flex-shrink:0;
+}
+.toggle::after{
+  content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#8a8a8f;
+  transition:transform 170ms var(--dropdown-ease),background 170ms ease;
+}
+.toggle.on{background:var(--accent);}
+.toggle.on::after{transform:translateX(12px);background:#fff;}
+
+.panel-sep{height:1px;background:var(--border);margin:6px 2px;}
+.panel-label{padding:8px 8px 4px;font-size:11.5px;color:var(--text-faint);font-weight:500;}
+
+.chip-grid{display:flex;flex-wrap:wrap;gap:6px;padding:2px 2px 4px;}
+.chip{
+  padding:6px 10px;border-radius:7px;font-size:12px;font-weight:500;color:var(--text-dim);
+  background:var(--surface);border:1px solid var(--border);cursor:pointer;
+  transition:border-color 150ms ease,color 150ms ease,background 150ms ease;
+}
+.chip:hover{border-color:var(--border-hover);color:var(--text);}
+.chip.on{color:var(--text);border-color:var(--border-hover);background:var(--surface-3);}
+</style>
+</head>
+<body>
+
+<div class="window">
+  <div class="sidebar">
+    <div class="sb-top-row">
+      <div class="ws-switcher" style="flex:1;">
+        <div class="ws-mark">TBW</div>
+        <div class="ws-name">Test Blog Wo...</div>
+        <svg class="chev" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+      </div>
+      <div class="icon-row">
+        <div class="mini-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+        <div class="mini-btn round"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></div>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 9h18"/></svg>Inbox</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>My issues</div>
+    </div>
+
+    <div class="sb-section-head">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+      Workspace
+    </div>
+    <div class="nav-group">
+      <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7L12 12l8.7-5"/><path d="M12 22V12"/></svg>Projects</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7z"/></svg>Views</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>More</div>
+    </div>
+
+    <div class="sb-section-head" style="margin-top:6px;">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+      Your teams
+    </div>
+    <div class="team-block">
+      <div class="team-head">
+        <div class="team-mark">🌱</div>
+        Test Blog Workspace
+        <svg class="chev" viewBox="0 0 24 24" fill="currentColor" style="margin-left:auto;"><path d="M7 10l5 5 5-5z"/></svg>
+      </div>
+      <div class="team-children">
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10h16"/></svg>Issues</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Projects</div>
+        <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7z"/></svg>Views</div>
+      </div>
+    </div>
+
+    <div class="sb-section-head" style="margin-top:6px;">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+      Try
+    </div>
+    <div class="nav-group">
+      <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 2v4M17 2v4M3 10h18"/></svg>Import issues</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Invite people</div>
+      <div class="nav-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 4.4 2.9 8.2 6.8 9.5.5.1.7-.2.7-.5v-1.7c-2.800.6-3.4-1.3-3.4-1.3-.5-1.100-1.100-1.400-1.100-1.400-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.6-1.4-2.3-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.300.1-2.6 0 0 .8-.3 2.7 1a9 9 0 0 1 5 0c1.900-1.300 2.700-1 2.700-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.7 0 3.9-2.300 4.7-4.6 5 .4.3.7 1 .7 2v2.9c0 .3.2.6.7.5A10 10 0 0 0 22 12c0-5.5-4.5-10-10-10z"/></svg>Link GitHub</div>
+    </div>
+
+    <div class="sb-foot">
+      <div class="help-btn">?</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">
+        <span class="dim">Views</span>
+        <svg class="chevr" viewBox="0 0 24 24" fill="currentColor"><path d="M9 6l6 6-6 6"/></svg>
+        <svg class="crumb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7z"/></svg>
+        List
+        <div class="crumb-more">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="mini-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></div>
+        <div class="mini-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div>
+        <div class="mini-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="16" rx="1.5"/><rect x="14" y="4" width="7" height="16" rx="1.5"/></svg></div>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <div class="filter-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M7 12h10M10 19h4"/></svg>
+        Filter
+      </div>
+      <button class="display-btn" id="displayBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="9" cy="18" r="1.6" fill="currentColor" stroke="none"/></svg>
+        Display
+      </button>
+    </div>
+
+    <div class="list-wrap" id="listWrap">
+      <div class="group-head">
+        <svg class="status-dot" viewBox="0 0 24 24" fill="none" stroke="var(--text-faint)" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>
+        Todo <span class="group-count">8</span>
+        <div class="add-issue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+      </div>
+
+      <div class="issue-row">
+        <svg class="prio" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="17" y="4" width="4" height="17"/></svg>
+        <span class="issue-id">TES-1</span>
+        <svg class="state-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>
+        <span class="issue-title">Welcome to Linear 👋</span>
+        <span class="issue-date">May 12</span>
+        <div class="row-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+      </div>
+      <div class="issue-row">
+        <svg class="prio" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="17" y="4" width="4" height="17"/></svg>
+        <span class="issue-id">TES-2</span>
+        <svg class="state-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg>
+        <span class="issue-title">3 ways to navigate Linear: Command menu, keyboard or mouse</span>
+        <span class="issue-date">May 12</span>
+        <div class="row-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+      </div>
+
+      <div class="group-head" style="margin-top:6px;">
+        <svg class="status-dot" viewBox="0 0 24 24" fill="none" stroke="#5e6ad2" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M8 12l2.5 2.5L16 9" stroke-width="2.2"/></svg>
+        Done <span class="group-count">1</span>
+        <div class="add-issue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+      </div>
+      <div class="issue-row">
+        <svg class="prio" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="17" y="4" width="4" height="17"/></svg>
+        <span class="issue-id">TES-6</span>
+        <svg class="state-circle done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M8 12l2.5 2.5L16 9" stroke-width="2.2"/></svg>
+        <span class="issue-title">Use Cycles to focus work over n–weeks</span>
+        <span class="issue-date">May 12</span>
+        <div class="row-avatar filled">KL</div>
+      </div>
+    </div>
+
+    <!-- display panel -->
+    <div class="overlay" id="overlay" style="display:none;"></div>
+    <div class="panel" id="panel">
+      <div class="view-toggle">
+        <div class="view-opt active" data-v="list">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          List
+        </div>
+        <div class="view-opt" data-v="board">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="16" rx="1.5"/><rect x="14" y="4" width="7" height="16" rx="1.5"/></svg>
+          Board
+        </div>
+      </div>
+      <div class="panel-sep"></div>
+      <div class="panel-row">
+        <span>Grouping</span>
+        <div class="mini-select">Status <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></div>
+      </div>
+      <div class="panel-row">
+        <span>Ordering</span>
+        <div class="mini-select">Priority <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></div>
+      </div>
+      <div class="panel-row">
+        <span>Show sub-issues</span>
+        <div class="toggle on" data-t></div>
+      </div>
+      <div class="panel-sep"></div>
+      <div class="panel-label">Display properties</div>
+      <div class="chip-grid">
+        <div class="chip on">Priority</div>
+        <div class="chip on">ID</div>
+        <div class="chip on">Status</div>
+        <div class="chip">Milestone</div>
+        <div class="chip on">Created</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const displayBtn = document.getElementById('displayBtn');
+const panel = document.getElementById('panel');
+const overlay = document.getElementById('overlay');
+function openPanel(){ panel.classList.add('open'); overlay.style.display = 'block'; displayBtn.classList.add('active'); }
+function closePanel(){ panel.classList.remove('open'); overlay.style.display = 'none'; displayBtn.classList.remove('active'); }
+displayBtn.addEventListener('click', (e)=>{ e.stopPropagation(); panel.classList.contains('open') ? closePanel() : openPanel(); });
+overlay.addEventListener('click', closePanel);
+document.querySelectorAll('.view-opt').forEach(v=>{ v.addEventListener('click', ()=>{ document.querySelectorAll('.view-opt').forEach(x=>x.classList.remove('active')); v.classList.add('active'); }); });
+document.querySelectorAll('.toggle').forEach(t=>{ t.addEventListener('click', ()=> t.classList.toggle('on')); });
+document.querySelectorAll('.chip').forEach(c=>{ c.addEventListener('click', ()=> c.classList.toggle('on')); });
+</script>
+</body>
+</html>

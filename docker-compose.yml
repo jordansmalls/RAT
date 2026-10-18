@@ -1,0 +1,28 @@
+# Optional local services. Not needed if you already run MongoDB locally
+# (e.g. `brew install mongodb-community`) or point MONGODB_URI at Atlas.
+#
+#   docker compose up -d
+#
+# Mailpit catches outgoing email at http://localhost:8025. To use it, set
+# MAIL_MAILER=smtp, MAIL_HOST=127.0.0.1 and MAIL_PORT=1025 in api/.env.
+services:
+  mongodb:
+    image: mongo:8
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  mongo-data:
